@@ -45,11 +45,26 @@ class LocalApi extends Homey.App {
   }
 
   /**
+   * Normalize a route value so users can define routes both with and without a leading slash.
+   */
+  normalizeRoute(route?: string): string {
+    if (!route) {
+      return '/';
+    }
+    const trimmed = route.trim();
+    if (!trimmed) {
+      return '/';
+    }
+    return trimmed.startsWith('/') ? trimmed : `/${trimmed}`;
+  }
+
+  /**
    * Check if the requested url is registered by at least one flow (regardless of method)
    * @param req The node http request object
    */
   isRouteAuthorized(req: IncomingMessage): boolean {
-    return this.requestReceivedArgs.find((arg: LocalApiRequestArgs) => arg.url === req.url) !== undefined;
+    const normalizedRequestUrl = this.normalizeRoute(req.url);
+    return this.requestReceivedArgs.find((arg: LocalApiRequestArgs) => this.normalizeRoute(arg.url) === normalizedRequestUrl) !== undefined;
   }
 
   /**
@@ -57,8 +72,9 @@ class LocalApi extends Homey.App {
    * @param req The node http request object
    */
   isRouteAndMethodAuthorized(req: IncomingMessage): boolean {
+    const normalizedRequestUrl = this.normalizeRoute(req.url);
     return this.requestReceivedArgs.find(
-      (arg: LocalApiRequestArgs) => arg.url === req.url && arg.method === req.method?.toLowerCase(),
+      (arg: LocalApiRequestArgs) => this.normalizeRoute(arg.url) === normalizedRequestUrl && arg.method === req.method?.toLowerCase(),
     ) !== undefined;
   }
 
@@ -131,14 +147,24 @@ class LocalApi extends Homey.App {
    * @param state The state of the action card
    */
   responseWithActionRunListener = async (args: LocalApiRequestArgs, state: LocalApiRequestState) => {
-    const validation = this.validateJsonBody(args.body || '');
     let parsedBody: unknown;
-    if (validation.valid) {
-      parsedBody = validation.data ?? {};
+
+    if (typeof args.body === 'object' && args.body !== null) {
+      parsedBody = args.body;
+    } else if (typeof args.body === 'string') {
+      const validation = this.validateJsonBody(args.body);
+      if (validation.valid) {
+        parsedBody = validation.data ?? {};
+      } else {
+        this.error(`HTTP API: "Respond with..." action received invalid JSON: ${validation.error}. Body was: ${args.body}`);
+        parsedBody = { status: 'error', message: `Invalid JSON: ${validation.error}` };
+      }
+    } else if (args.body === undefined || args.body === null || args.body === '') {
+      parsedBody = {};
     } else {
-      this.error(`HTTP API: "Respond with..." action received invalid JSON: ${validation.error}. Body was: ${args.body}`);
-      parsedBody = { status: 'error', message: `Invalid JSON: ${validation.error}` };
+      parsedBody = args.body;
     }
+
     try {
       this.localApiEvent.emit('responseAction', parsedBody);
     } catch (e) {
@@ -153,7 +179,8 @@ class LocalApi extends Homey.App {
    * @param state The state of the trigger card
    */
   requestReceivedTriggerRunListener = async (args: LocalApiRequestArgs, state: LocalApiRequestState) => (
-    args.url === state.request.url && args.method === state.request.method?.toLowerCase()
+    this.normalizeRoute(args.url) === this.normalizeRoute(state.request.url)
+    && args.method === state.request.method?.toLowerCase()
   );
 
   /**
