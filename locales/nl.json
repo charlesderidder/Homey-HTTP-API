@@ -1,0 +1,26 @@
+{
+  "settings": {
+    "title": "HTTP API",
+    "subtitle": "App-instellingen",
+    "serverSettings": "Serverinstellingen",
+    "port": {
+      "label": "Poort",
+      "description": "De poort waarop geluisterd wordt (standaard: 3000)"
+    },
+    "cors": {
+      "label": "CORS (standaard: ingeschakeld)",
+      "enabled": "Ingeschakeld",
+      "disabled": "Uitgeschakeld"
+    },
+    "corsAccessControlAllowOrigin": {
+      "label": "Access-Control-Allow-Origin (standaard: *)"
+    },
+    "jsonAutoCorrect": {
+      "label": "Veelgemaakte JSON-fouten automatisch corrigeren",
+      "enabled": "Ingeschakeld",
+      "disabled": "Uitgeschakeld"
+    },
+    "save": "Opslaan",
+    "saved": "Instellingen succesvol opgeslagen"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "title": {
+    "en": "Respond with...",
+    "de": "Anworte mit...",
+    "nl": "Reageer met..."
+  },
+  "titleFormatted": {
+    "en": "Respond with [[body]] JSON.",
+    "de": "Antworte mit [[body]] JSON.",
+    "nl": "Reageer met [[body]] JSON."
+  },
+  "hint": {
+    "en": "Personalize the response object",
+    "de": "Personalisieren das Antwortobject",
+    "nl": "Personaliseer het antwoordobject"
+  },
+  "args": [
+    {
+      "type": "text",
+      "name": "body",
+      "placeholder": {
+        "en": "Body JSON response",
+        "de": "JSON Antwort",
+        "nl": "JSON-antwoord"
+      }
+    }
+  ]
+}

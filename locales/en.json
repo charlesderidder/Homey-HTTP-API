@@ -1,0 +1,26 @@
+{
+  "settings": {
+    "title": "HTTP API",
+    "subtitle": "App Settings",
+    "serverSettings": "Server Settings",
+    "port": {
+      "label": "Port",
+      "description": "The port to listen on (default: 3000)"
+    },
+    "cors": {
+      "label": "CORS (default: enabled)",
+      "enabled": "Enabled",
+      "disabled": "Disabled"
+    },
+    "corsAccessControlAllowOrigin": {
+      "label": "Access-Control-Allow-Origin (default: *)"
+    },
+    "jsonAutoCorrect": {
+      "label": "Automatically correct common JSON errors",
+      "enabled": "Enabled",
+      "disabled": "Disabled"
+    },
+    "save": "Save",
+    "saved": "Settings saved successfully"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "settings": {
+    "title": "HTTP API",
+    "subtitle": "App-Einstellungen",
+    "serverSettings": "Server-Einstellungen",
+    "port": {
+      "label": "Port",
+      "description": "Der zu überwachende Port (Standard: 3000)"
+    },
+    "cors": {
+      "label": "CORS (Standard: aktiviert)",
+      "enabled": "Aktiviert",
+      "disabled": "Deaktiviert"
+    },
+    "corsAccessControlAllowOrigin": {
+      "label": "Access-Control-Allow-Origin (Standard: *)"
+    },
+    "jsonAutoCorrect": {
+      "label": "Häufige JSON-Fehler automatisch korrigieren",
+      "enabled": "Aktiviert",
+      "disabled": "Deaktiviert"
+    },
+    "save": "Speichern",
+    "saved": "Einstellungen erfolgreich gespeichert"
+  }
+}

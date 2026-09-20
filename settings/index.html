@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HTTP API Settings</title>
+  <script
+      type="text/javascript"
+      src="/homey.js"
+      data-origin="settings"
+  ></script>
+</head>
+<body>
+<header class="homey-header">
+  <h1 class="homey-title" data-i18n="settings.title">
+    <!-- This will be filled with the translated string with key 'settings.title'. -->
+  </h1>
+  <p class="homey-subtitle" data-i18n="settings.subtitle">
+    <!-- This field will also be translated -->
+  </p>
+</header>
+
+<fieldset class="homey-form-fieldset">
+  <legend class="homey-form-legend" data-i18n="settings.serverSettings">Server Settings</legend>
+  
+  <div class="homey-form-group">
+    <label class="homey-form-label" for="server-port" data-i18n="settings.port.label">Port</label>
+    <input class="homey-form-input" id="server-port" type="number" value="3000" />
+  </div>
+  <div class="homey-form-group">
+    <label class="homey-form-label" for="cors-enabled" data-i18n="settings.cors.label">CORS (default: enabled)</label>
+    <select class="homey-form-select" name="cors-enabled" id="cors-enabled">
+      <option value="true" data-i18n="settings.cors.enabled">Enabled</option>
+      <option value="false" data-i18n="settings.cors.disabled">Disabled</option>
+    </select>
+  </div>
+  <div class="homey-form-group" id="additional-cors-settings" style="display: none;">
+    <label class="homey-form-label" for="cors-acao" data-i18n="settings.corsAccessControlAllowOrigin.label">Access-Control-Allow-Origin (default: *)</label>
+    <input class="homey-form-input" id="cors-acao" type="text" value="*" />
+  </div>
+  <div class="homey-form-group">
+    <label class="homey-form-label" for="json-auto-correct" data-i18n="settings.jsonAutoCorrect.label">Automatically correct common JSON errors</label>
+    <select class="homey-form-select" name="json-auto-correct" id="json-auto-correct">
+      <option value="false" data-i18n="settings.jsonAutoCorrect.disabled">Disabled</option>
+      <option value="true" data-i18n="settings.jsonAutoCorrect.enabled">Enabled</option>
+    </select>
+  </div>
+</fieldset>
+
+<button id="save" class="homey-button-primary-full" data-i18n="settings.save">Save</button>
+<p id="save-confirmation" data-i18n="settings.saved" style="display: none; color: green; margin-top: 8px;"></p>
+
+<script type="text/javascript">
+  function onHomeyReady(Homey) {
+    // Identify the elements we need to interact with
+    const portInput = document.getElementById('server-port');
+    const corsSelect = document.getElementById('cors-enabled');
+    const saveButton = document.getElementById('save');
+    const additionalCorsSettings = document.getElementById('additional-cors-settings');
+    const corsAcaoInput = document.getElementById('cors-acao');
+    const jsonAutoCorrectSelect = document.getElementById('json-auto-correct');
+    const saveConfirmation = document.getElementById('save-confirmation');
+    let saveConfirmationTimeout;
+    // Show a brief confirmation message under the save button
+    const showSaveConfirmation = () => {
+      saveConfirmation.style.display = 'block';
+      clearTimeout(saveConfirmationTimeout);
+      saveConfirmationTimeout = setTimeout(() => {
+        saveConfirmation.style.display = 'none';
+      }, 3000);
+    };
+    // Wrap Homey.set in a Promise so we can wait for all settings to be saved
+    const setSetting = (key, value) => new Promise((resolve, reject) => {
+      Homey.set(key, value, (err) => {
+        if (err) return reject(err);
+        return resolve();
+      });
+    });
+    // Display additional CORS settings when CORS is enabled
+    const displayCorsSettings = () => {
+      if (corsSelect.value === 'true') {
+        additionalCorsSettings.style.display = 'block';
+      } else {
+        additionalCorsSettings.style.display = 'none';
+      }
+    };
+    corsSelect.addEventListener('change', () => {
+      displayCorsSettings();
+    });
+    // Retrieve information from the Homey API
+    Homey.get('serverPort', (err, port) => {
+      if (err) return console.error(err);
+      portInput.value = port;
+    });
+    Homey.get('corsStatus', (err, cors) => {
+      if (err) return console.error(err);
+      corsSelect.value = cors || 'true';
+    });
+    Homey.get('corsAcao', (err, corsAcao) => {
+      if (err) return console.error(err);
+      corsAcaoInput.value = corsAcao || '*';
+    });
+    Homey.get('jsonAutoCorrect', (err, jsonAutoCorrect) => {
+      if (err) return console.error(err);
+      jsonAutoCorrectSelect.value = jsonAutoCorrect || 'false';
+    });
+    // Add event listeners
+    saveButton.addEventListener('click', () => {
+      Promise.all([
+        setSetting('serverPort', portInput.value),
+        setSetting('corsStatus', corsSelect.value),
+        setSetting('corsAcao', corsAcaoInput.value),
+        setSetting('jsonAutoCorrect', jsonAutoCorrectSelect.value),
+      ])
+        .then(() => showSaveConfirmation())
+        .catch((err) => Homey.alert(err));
+    });
+    displayCorsSettings();
+
+    Homey.ready();
+  }
+</script>
+</body>
+</html>

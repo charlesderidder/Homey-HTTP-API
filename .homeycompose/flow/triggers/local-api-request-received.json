@@ -1,0 +1,90 @@
+{
+  "title": {
+    "en": "An HTTP API request is received",
+    "de": "Eine HTTP-API-Anfrage wird empfangen",
+    "nl": "Er is een HTTP API-verzoek ontvangen"
+  },
+  "titleFormatted": {
+    "en": "A [[method]] request received on url [[url]]",
+    "de": "Eine [[method]]-Anfrage mit der URL [[url]] wurde empfangen",
+    "nl": "Een [[method]]-verzoek ontvangen op url [[url]]"
+  },
+  "args": [
+    {
+      "type": "text",
+      "name": "url",
+      "placeholder": {
+        "en": "/test",
+        "de": "/test",
+        "nl": "/test"
+      }
+    },
+    {
+      "type": "dropdown",
+      "name": "method",
+      "values": [
+        {
+          "id": "get",
+          "label": {
+            "en": "GET",
+            "de": "GET",
+            "nl": "GET"
+          }
+        },
+        {
+          "id": "post",
+          "label": {
+            "en": "POST",
+            "de": "POST",
+            "nl": "POST"
+          }
+        },
+        {
+          "id": "put",
+          "label": {
+            "en": "PUT",
+            "de": "PUT",
+            "nl": "PUT"
+          }
+        },
+        {
+          "id": "options",
+          "label": {
+            "en": "OPTIONS",
+            "de": "OPTIONS",
+            "nl": "OPTIONS"
+          }
+        }
+      ]
+    }
+  ],
+  "tokens": [
+    {
+      "name": "url",
+      "type": "string",
+      "title": {
+        "en": "URL",
+        "de": "URL",
+        "nl": "URL"
+      }
+    },
+    {
+      "name": "method",
+      "type": "string",
+      "title": {
+        "en": "Method",
+        "de": "Methode",
+        "nl": "Methode"
+      }
+    },
+    {
+      "name": "body",
+      "type": "string",
+      "title": {
+        "en": "Body",
+        "de": "Inhalt",
+        "nl": "Inhoud"
+      }
+    }
+  ]
+}

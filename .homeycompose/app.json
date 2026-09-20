@@ -1,0 +1,59 @@
+{
+  "id": "dev.charlesderidder.homeyhttpapi",
+  "version": "1.0.4",
+  "compatibility": ">=8.1.1",
+  "sdk": 3,
+  "platforms": [
+    "local"
+  ],
+  "name": {
+    "en": "HTTP API",
+    "de": "HTTP API",
+    "nl": "HTTP API"
+  },
+  "description": {
+    "en": "HTTP API hosted and served directly from your Homey Hub",
+    "de": "HTTP-API direkt auf deinem Homey Hub gehostet und bereitgestellt",
+    "nl": "HTTP API rechtstreeks gehost en aangeboden door je Homey Hub"
+  },
+  "category": [
+    "internet"
+  ],
+  "permissions": [],
+  "images": {
+    "small": "/assets/images/small.png",
+    "large": "/assets/images/large.png",
+    "xlarge": "/assets/images/xlarge.png"
+  },
+  "author": {
+    "name": "Charles de Ridder",
+    "email": "charlesderidder@gmail.com"
+  },
+  "brandColor": "#0052cc",
+  "contributors": {
+    "developers": [
+      {
+        "name": "Charles de Ridder",
+        "email": "charlesderidder@gmail.com"
+      }
+    ],
+    "translators": [
+      {
+        "name": "Charles de Ridder",
+        "email": "charlesderidder@gmail.com"
+      }
+    ]
+  },
+  "contributing": {
+    "donate": {
+      "paypal": {
+        "username": "CharlesDeRidder83"
+      }
+    }
+  },
+  "bugs": {
+    "url": "https://github.com/charlesderidder/homeylocalapi/issues"
+  },
+  "homeyCommunityTopicId": 70840,
+  "source": "https://github.com/charlesderidder/homeylocalapi"
+}

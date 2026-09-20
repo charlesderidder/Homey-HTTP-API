@@ -1,0 +1,17 @@
+{
+  "1.0": {
+    "en": "First edtions"
+  },
+  "1.1": {
+    "en": "Added PUT/OPTIONS method support"
+  },
+  "1.2": {
+    "en": "Add dutch translation"
+  },
+  "1.3": {
+    "en": "JSON body validation"
+  },
+  "1.4": {
+    "en": "Small bugfixed"
+  }
+}
