@@ -96,35 +96,17 @@ class LocalApi extends Homey.App {
   }
 
   /**
-   * Retrieve whether common JSON mistakes may be corrected automatically.
-   */
-  isJsonAutoCorrectActive(): boolean {
-    return this.homey.settings.get('jsonAutoCorrect') === 'true';
-  }
-
-  /**
    * Validate that a (possibly empty) string is syntactically valid JSON.
    * An empty body is considered valid (no data to validate).
    * @param raw The raw string to validate as JSON
-   * @param allowCorrection Whether conservative common-error corrections are allowed
    */
-  validateJsonBody(raw: string, allowCorrection = false): JsonValidationResult {
+  validateJsonBody(raw: string): JsonValidationResult {
     if (!raw || raw.trim() === '') {
       return { valid: true, data: undefined };
     }
     try {
       return { valid: true, data: JSON.parse(raw) };
     } catch (e) {
-      if (allowCorrection) {
-        const normalized = this.correctJson(raw);
-        if (normalized !== raw.trim()) {
-          try {
-            return { valid: true, data: JSON.parse(normalized), normalized };
-          } catch {
-            // Return the original parser error when correction did not help.
-          }
-        }
-      }
       return { valid: false, error: e instanceof Error ? e.message : 'Invalid JSON' };
     }
   }
@@ -149,7 +131,7 @@ class LocalApi extends Homey.App {
    * @param state The state of the action card
    */
   responseWithActionRunListener = async (args: LocalApiRequestArgs, state: LocalApiRequestState) => {
-    const validation = this.validateJsonBody(args.body || '', this.isJsonAutoCorrectActive());
+    const validation = this.validateJsonBody(args.body || '');
     let parsedBody: unknown;
     if (validation.valid) {
       parsedBody = validation.data ?? {};
@@ -270,14 +252,11 @@ class LocalApi extends Homey.App {
           throw e;
         }
 
-        const validation = this.validateJsonBody(rawBody, this.isJsonAutoCorrectActive());
+        const validation = this.validateJsonBody(rawBody);
         if (!validation.valid) {
           this.error(`HTTP API [#${reqId}]: invalid JSON body received: ${validation.error}`);
           this.sendJson(res, 400, { status: 'error', message: `Invalid JSON body: ${validation.error}` });
           return;
-        }
-        if (validation.normalized) {
-          rawBody = validation.normalized;
         }
       }
 

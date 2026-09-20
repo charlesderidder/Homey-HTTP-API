@@ -1,0 +1,30 @@
+{
+  "id": "dev.charlesderidder.httpapi",
+  "version": "1.0.0",
+  "compatibility": ">=12.4.0",
+  "sdk": 3,
+  "runtime": "nodejs",
+  "platforms": [
+    "local",
+    "cloud"
+  ],
+  "name": {
+    "en": "Homey HTTP API"
+  },
+  "description": {
+    "en": "Use your Homey as a API Server"
+  },
+  "category": [
+    "internet"
+  ],
+  "permissions": [],
+  "images": {
+    "small": "/assets/images/small.png",
+    "large": "/assets/images/large.png",
+    "xlarge": "/assets/images/xlarge.png"
+  },
+  "author": {
+    "name": "Charles de Ridder",
+    "email": "charlesderidder@gmail.com"
+  }
+}

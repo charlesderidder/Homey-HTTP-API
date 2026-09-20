@@ -37,13 +37,6 @@
     <label class="homey-form-label" for="cors-acao" data-i18n="settings.corsAccessControlAllowOrigin.label">Access-Control-Allow-Origin (default: *)</label>
     <input class="homey-form-input" id="cors-acao" type="text" value="*" />
   </div>
-  <div class="homey-form-group">
-    <label class="homey-form-label" for="json-auto-correct" data-i18n="settings.jsonAutoCorrect.label">Automatically correct common JSON errors</label>
-    <select class="homey-form-select" name="json-auto-correct" id="json-auto-correct">
-      <option value="false" data-i18n="settings.jsonAutoCorrect.disabled">Disabled</option>
-      <option value="true" data-i18n="settings.jsonAutoCorrect.enabled">Enabled</option>
-    </select>
-  </div>
 </fieldset>
 
 <button id="save" class="homey-button-primary-full" data-i18n="settings.save">Save</button>
@@ -57,10 +50,9 @@
     const saveButton = document.getElementById('save');
     const additionalCorsSettings = document.getElementById('additional-cors-settings');
     const corsAcaoInput = document.getElementById('cors-acao');
-    const jsonAutoCorrectSelect = document.getElementById('json-auto-correct');
     const saveConfirmation = document.getElementById('save-confirmation');
     let saveConfirmationTimeout;
-    // Show a brief confirmation message under the save button
+
     const showSaveConfirmation = () => {
       saveConfirmation.style.display = 'block';
       clearTimeout(saveConfirmationTimeout);
@@ -68,6 +60,7 @@
         saveConfirmation.style.display = 'none';
       }, 3000);
     };
+
     // Wrap Homey.set in a Promise so we can wait for all settings to be saved
     const setSetting = (key, value) => new Promise((resolve, reject) => {
       Homey.set(key, value, (err) => {
@@ -99,17 +92,12 @@
       if (err) return console.error(err);
       corsAcaoInput.value = corsAcao || '*';
     });
-    Homey.get('jsonAutoCorrect', (err, jsonAutoCorrect) => {
-      if (err) return console.error(err);
-      jsonAutoCorrectSelect.value = jsonAutoCorrect || 'false';
-    });
     // Add event listeners
     saveButton.addEventListener('click', () => {
       Promise.all([
         setSetting('serverPort', portInput.value),
         setSetting('corsStatus', corsSelect.value),
         setSetting('corsAcao', corsAcaoInput.value),
-        setSetting('jsonAutoCorrect', jsonAutoCorrectSelect.value),
       ])
         .then(() => showSaveConfirmation())
         .catch((err) => Homey.alert(err));

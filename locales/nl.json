@@ -15,11 +15,6 @@
     "corsAccessControlAllowOrigin": {
       "label": "Access-Control-Allow-Origin (standaard: *)"
     },
-    "jsonAutoCorrect": {
-      "label": "Veelgemaakte JSON-fouten automatisch corrigeren",
-      "enabled": "Ingeschakeld",
-      "disabled": "Uitgeschakeld"
-    },
     "save": "Opslaan",
     "saved": "Instellingen succesvol opgeslagen"
   }
