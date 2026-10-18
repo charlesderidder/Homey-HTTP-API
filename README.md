@@ -34,10 +34,10 @@ Create named timers in the **Timers** tab in app settings. The list can be impor
 The countdown flow cards provide:
 
 - Triggers for reaching zero, reaching a selected value, starting, stopping before zero, changing value, and starting or updating.
-- Actions to start a fixed or inclusive random duration, adjust a running or paused timer, stop one or all timers, and pause or resume a timer.
+- Actions to start a fixed or inclusive random duration, optionally repeat it for a chosen number of rounds (up to 1,000), adjust a running or paused timer, stop one or all timers, and pause or resume a timer. Random durations are selected once and reused for every round.
 - Conditions for running state, paused state, exact value (or not), and less-than or greater-than comparisons.
 
-Values are measured in whole seconds. A stopped timer is reset to `-1`; a timer that reaches zero remains at `0` until it is started or stopped.
+Values are measured in whole seconds. The zero trigger includes the completed round number and the number of rounds remaining. A stopped timer is reset to `-1`; a timer that completes its final round remains at `0` until it is started or stopped.
 
 ## Why it matters
 

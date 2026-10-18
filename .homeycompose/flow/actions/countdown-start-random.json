@@ -5,9 +5,9 @@
     "nl": "Start een willekeurige afteltimer"
   },
   "titleFormatted": {
-    "en": "Start timer [[timer]] for a random duration from [[min]] to [[max]] seconds",
-    "de": "Timer [[timer]] mit zufälliger Dauer von [[min]] bis [[max]] Sekunden starten",
-    "nl": "Start timer [[timer]] met een willekeurige duur van [[min]] tot [[max]] seconden"
+    "en": "Start timer [[timer]] for a random duration from [[min]] to [[max]] seconds, repeated [[rounds]] times",
+    "de": "Timer [[timer]] mit zufälliger Dauer von [[min]] bis [[max]] Sekunden starten, [[rounds]]-mal wiederholen",
+    "nl": "Start timer [[timer]] met een willekeurige duur van [[min]] tot [[max]] seconden, [[rounds]] keer herhalen"
   },
   "args": [
     {
@@ -35,6 +35,15 @@
         "en": "Maximum seconds",
         "de": "Maximale Sekunden",
         "nl": "Maximum aantal seconden"
+      }
+    },
+    {
+      "type": "number",
+      "name": "rounds",
+      "title": {
+        "en": "Number of rounds",
+        "de": "Anzahl der Runden",
+        "nl": "Aantal rondes"
       }
     }
   ]

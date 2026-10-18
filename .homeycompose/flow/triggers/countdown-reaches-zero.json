@@ -38,6 +38,24 @@
         "de": "Wert",
         "nl": "Waarde"
       }
+    },
+    {
+      "name": "round",
+      "type": "number",
+      "title": {
+        "en": "Round",
+        "de": "Runde",
+        "nl": "Ronde"
+      }
+    },
+    {
+      "name": "rounds_remaining",
+      "type": "number",
+      "title": {
+        "en": "Rounds remaining",
+        "de": "Verbleibende Runden",
+        "nl": "Resterende rondes"
+      }
     }
   ]
 }

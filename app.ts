@@ -25,6 +25,9 @@ interface CountdownTimer {
   value: number;
   expiresAt: number | null;
   paused: boolean;
+  round: number;
+  roundsRemaining: number;
+  repeatDuration: number | null;
 }
 
 interface CountdownFlowArgs {
@@ -35,12 +38,14 @@ interface CountdownFlowArgs {
   value?: unknown;
   expected?: unknown;
   comparison?: unknown;
+  rounds?: unknown;
 }
 
 const COUNTDOWN_TIMER_NAMES_SETTING = 'countdownTimerNames';
 const COUNTDOWN_TIMER_STATES_SETTING = 'countdownTimerStates';
 const COUNTDOWN_INTERVAL_MS = 1000;
 const MAX_COUNTDOWN_SECONDS = Math.floor((8.64e15 - Date.now()) / 1000);
+const MAX_COUNTDOWN_ROUNDS = 1000;
 const COUNTDOWN_TRIGGER_IDS = [
   'countdown-reaches-zero',
   'countdown-reaches-value',
@@ -101,16 +106,19 @@ class LocalApi extends Homey.App {
     });
   }
 
-  fireCountdownTrigger(id: string, timer: CountdownTimer, value: number): void {
+  fireCountdownTrigger(
+    id: string,
+    timer: CountdownTimer,
+    value: number,
+    roundInfo?: { round: number; rounds_remaining: number },
+  ): void {
     const trigger = this.countdownTriggers.get(id);
     if (!trigger) {
       this.error(`Countdown trigger "${id}" is not registered.`);
       return;
     }
-    trigger.trigger(
-      { timer: timer.name, value },
-      { timer: timer.name, value },
-    ).catch((error: unknown) => this.error(`Countdown trigger "${id}" failed`, error));
+    const tokens = { timer: timer.name, value, ...roundInfo };
+    trigger.trigger(tokens, tokens).catch((error: unknown) => this.error(`Countdown trigger "${id}" failed`, error));
   }
 
   fireCountdownValueChanged(timer: CountdownTimer, previousValue: number, nextValue: number): void {
@@ -130,15 +138,48 @@ class LocalApi extends Homey.App {
     return seconds;
   }
 
-  async startCountdown(name: unknown, rawSeconds: unknown): Promise<void> {
+  validateCountdownRounds(value: unknown): number {
+    const rounds = value === undefined || value === null || value === '' ? 1 : Number(value);
+    if (!Number.isSafeInteger(rounds) || rounds < 1 || rounds > MAX_COUNTDOWN_ROUNDS) {
+      throw new Error(`Countdown rounds must be a whole number between 1 and ${MAX_COUNTDOWN_ROUNDS}.`);
+    }
+    return rounds;
+  }
+
+  finishCountdownRound(timer: CountdownTimer, now = Date.now()): { round: number; rounds_remaining: number } {
+    const roundInfo = {
+      round: timer.round,
+      rounds_remaining: timer.roundsRemaining,
+    };
+    if (timer.roundsRemaining > 0 && timer.repeatDuration !== null) {
+      timer.roundsRemaining -= 1;
+      timer.round += 1;
+      timer.value = timer.repeatDuration;
+      timer.expiresAt = now + timer.repeatDuration * 1000;
+    } else {
+      timer.roundsRemaining = 0;
+      timer.repeatDuration = null;
+      timer.expiresAt = null;
+    }
+    return roundInfo;
+  }
+
+  async startCountdown(name: unknown, rawSeconds: unknown, rawRounds?: unknown): Promise<void> {
     const timer = this.getCountdownTimer(name);
     const seconds = this.validateCountdownSeconds(rawSeconds, 'Countdown duration');
+    const rounds = this.validateCountdownRounds(rawRounds);
+    if (seconds === 0 && rounds > 1) {
+      throw new Error('Countdown duration must be greater than zero when using multiple rounds.');
+    }
     await this.tickCountdowns();
     const previousValue = this.getCountdownValue(timer);
     const wasRunning = timer.expiresAt !== null && !timer.paused;
     timer.value = seconds;
     timer.expiresAt = seconds > 0 ? Date.now() + seconds * 1000 : null;
     timer.paused = false;
+    timer.round = 1;
+    timer.roundsRemaining = rounds - 1;
+    timer.repeatDuration = rounds > 1 ? seconds : null;
     await this.saveCountdownStates();
     this.fireCountdownValueChanged(timer, previousValue, seconds);
     if (!wasRunning) {
@@ -146,7 +187,7 @@ class LocalApi extends Homey.App {
     }
     this.fireCountdownTrigger('countdown-started-or-updated', timer, seconds);
     if (seconds === 0) {
-      this.fireCountdownTrigger('countdown-reaches-zero', timer, 0);
+      this.fireCountdownTrigger('countdown-reaches-zero', timer, 0, this.finishCountdownRound(timer));
     }
   }
 
@@ -177,7 +218,9 @@ class LocalApi extends Homey.App {
     await this.saveCountdownStates();
     this.fireCountdownValueChanged(timer, previousValue, nextValue);
     if (nextValue === 0) {
-      this.fireCountdownTrigger('countdown-reaches-zero', timer, 0);
+      const roundInfo = this.finishCountdownRound(timer);
+      await this.saveCountdownStates();
+      this.fireCountdownTrigger('countdown-reaches-zero', timer, 0, roundInfo);
     } else {
       this.fireCountdownTrigger('countdown-started-or-updated', timer, nextValue);
     }
@@ -190,6 +233,9 @@ class LocalApi extends Homey.App {
     timer.value = -1;
     timer.expiresAt = null;
     timer.paused = false;
+    timer.round = 1;
+    timer.roundsRemaining = 0;
+    timer.repeatDuration = null;
     await this.saveCountdownStates();
     this.fireCountdownValueChanged(timer, previousValue, -1);
     if (stoppedBeforeZero) {
@@ -247,6 +293,9 @@ class LocalApi extends Homey.App {
           value: -1,
           expiresAt: null,
           paused: false,
+          round: 1,
+          roundsRemaining: 0,
+          repeatDuration: null,
         });
       }
     }
@@ -276,6 +325,27 @@ class LocalApi extends Homey.App {
         || typeof timer.paused !== 'boolean'
         || (timer.paused && timer.expiresAt !== null)
         || (timer.value === -1 && (timer.expiresAt !== null || timer.paused))
+        || (timer.round !== undefined && (
+          !Number.isSafeInteger(timer.round)
+          || (timer.round as number) < 1
+          || (timer.round as number) > MAX_COUNTDOWN_ROUNDS
+        ))
+        || (timer.roundsRemaining !== undefined && (
+          !Number.isSafeInteger(timer.roundsRemaining)
+          || (timer.roundsRemaining as number) < 0
+          || (timer.roundsRemaining as number) >= MAX_COUNTDOWN_ROUNDS
+        ))
+        || (timer.repeatDuration !== undefined && timer.repeatDuration !== null && (
+          !Number.isSafeInteger(timer.repeatDuration)
+          || (timer.repeatDuration as number) < 1
+          || (timer.repeatDuration as number) > MAX_COUNTDOWN_SECONDS
+        ))
+        || ((timer.repeatDuration === undefined || timer.repeatDuration === null) && timer.roundsRemaining !== undefined && timer.roundsRemaining !== 0)
+        || (timer.repeatDuration !== undefined && timer.repeatDuration !== null && (
+          !Number.isSafeInteger(timer.roundsRemaining)
+          || (timer.roundsRemaining as number) < 1
+        ))
+        || (timer.value === -1 && timer.repeatDuration !== undefined && timer.repeatDuration !== null)
       ) {
         throw new Error('Saved countdown timer states are invalid. Restart the app after repairing timer settings.');
       }
@@ -284,6 +354,9 @@ class LocalApi extends Homey.App {
         value: timer.value as number,
         expiresAt: timer.expiresAt as number | null,
         paused: timer.paused,
+        round: timer.round ?? 1,
+        roundsRemaining: timer.roundsRemaining ?? 0,
+        repeatDuration: timer.repeatDuration ?? null,
       });
     });
     if (savedStates.size !== (Array.isArray(rawStates) ? rawStates.length : 0)) {
@@ -308,26 +381,28 @@ class LocalApi extends Homey.App {
           value: -1,
           expiresAt: null,
           paused: false,
+          round: 1,
+          roundsRemaining: 0,
+          repeatDuration: null,
         },
       );
     }
     const now = Date.now();
-    const expiredTimers: Array<{ timer: CountdownTimer; previousValue: number }> = [];
+    const expiredTimers: Array<{ timer: CountdownTimer; previousValue: number; roundInfo: { round: number; rounds_remaining: number } }> = [];
     for (const timer of this.countdownTimers.values()) {
       if (timer.expiresAt !== null && timer.expiresAt <= now) {
         const previousValue = timer.value;
         timer.value = 0;
-        timer.expiresAt = null;
         timer.paused = false;
         if (previousValue !== 0) {
-          expiredTimers.push({ timer, previousValue });
+          expiredTimers.push({ timer, previousValue, roundInfo: this.finishCountdownRound(timer, now) });
         }
       }
     }
     await this.saveCountdownStates();
-    expiredTimers.forEach(({ timer, previousValue }) => {
+    expiredTimers.forEach(({ timer, previousValue, roundInfo }) => {
       this.fireCountdownValueChanged(timer, previousValue, 0);
-      this.fireCountdownTrigger('countdown-reaches-zero', timer, 0);
+      this.fireCountdownTrigger('countdown-reaches-zero', timer, 0, roundInfo);
     });
     this.countdownInterval = setInterval(() => {
       this.tickCountdowns().catch((error: unknown) => this.error('Countdown timer update failed', error));
@@ -344,7 +419,7 @@ class LocalApi extends Homey.App {
   async tickCountdowns(): Promise<void> {
     const now = Date.now();
     const changedValues: Array<{ timer: CountdownTimer; previousValue: number; nextValue: number }> = [];
-    const expiredTimers: CountdownTimer[] = [];
+    const expiredTimers: Array<{ timer: CountdownTimer; roundInfo: { round: number; rounds_remaining: number } }> = [];
     this.countdownTimers.forEach((timer) => {
       if (timer.expiresAt === null || timer.paused) {
         return;
@@ -355,8 +430,7 @@ class LocalApi extends Homey.App {
         timer.value = nextValue;
         changedValues.push({ timer, previousValue, nextValue });
         if (nextValue === 0) {
-          timer.expiresAt = null;
-          expiredTimers.push(timer);
+          expiredTimers.push({ timer, roundInfo: this.finishCountdownRound(timer, now) });
         }
       }
     });
@@ -366,7 +440,7 @@ class LocalApi extends Homey.App {
     changedValues.forEach(({ timer, previousValue, nextValue }) => {
       this.fireCountdownValueChanged(timer, previousValue, nextValue);
     });
-    expiredTimers.forEach((timer) => this.fireCountdownTrigger('countdown-reaches-zero', timer, 0));
+    expiredTimers.forEach(({ timer, roundInfo }) => this.fireCountdownTrigger('countdown-reaches-zero', timer, 0, roundInfo));
   }
 
   registerCountdownCards(): void {
@@ -383,7 +457,7 @@ class LocalApi extends Homey.App {
     const startCard = this.homey.flow.getActionCard('countdown-start');
     this.registerCountdownTimerAutocomplete(startCard);
     startCard.registerRunListener(async (args: CountdownFlowArgs) => {
-      await this.startCountdown(args.timer, args.seconds);
+      await this.startCountdown(args.timer, args.seconds, args.rounds);
       return true;
     });
     const randomCard = this.homey.flow.getActionCard('countdown-start-random');
@@ -394,7 +468,7 @@ class LocalApi extends Homey.App {
       if (min > max) {
         throw new Error('Minimum countdown duration cannot be greater than the maximum.');
       }
-      await this.startCountdown(args.timer, min + Math.floor(Math.random() * (max - min + 1)));
+      await this.startCountdown(args.timer, min + Math.floor(Math.random() * (max - min + 1)), args.rounds);
       return true;
     });
     const adjustCard = this.homey.flow.getActionCard('countdown-adjust');

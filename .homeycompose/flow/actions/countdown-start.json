@@ -5,9 +5,9 @@
     "nl": "Start een afteltimer"
   },
   "titleFormatted": {
-    "en": "Start timer [[timer]] for [[seconds]] seconds",
-    "de": "Timer [[timer]] für [[seconds]] Sekunden starten",
-    "nl": "Start timer [[timer]] voor [[seconds]] seconden"
+    "en": "Start timer [[timer]] for [[seconds]] seconds, repeated [[rounds]] times",
+    "de": "Timer [[timer]] für [[seconds]] Sekunden starten, [[rounds]]-mal wiederholen",
+    "nl": "Start timer [[timer]] voor [[seconds]] seconden, [[rounds]] keer herhalen"
   },
   "args": [
     {
@@ -26,6 +26,15 @@
         "en": "Seconds",
         "de": "Sekunden",
         "nl": "Seconden"
+      }
+    },
+    {
+      "type": "number",
+      "name": "rounds",
+      "title": {
+        "en": "Number of rounds",
+        "de": "Anzahl der Runden",
+        "nl": "Aantal rondes"
       }
     }
   ]
