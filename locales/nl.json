@@ -1,6 +1,6 @@
 {
   "settings": {
-    "title": "HTTP API",
+    "title": "Homey Toolkit",
     "subtitle": "App-instellingen",
     "serverSettings": "Serverinstellingen",
     "port": {
@@ -14,6 +14,88 @@
     },
     "corsAccessControlAllowOrigin": {
       "label": "Access-Control-Allow-Origin (standaard: *)"
+    },
+    "authentication": {
+      "title": "API-authenticatie",
+      "label": "Authenticatie met API-token",
+      "disabled": "Uitgeschakeld",
+      "enabled": "Ingeschakeld",
+      "tokenLabel": "API-token",
+      "show": "Tonen",
+      "generate": "Nieuw token genereren",
+      "usage": "Gebruik in de URL: /informatie?token=abc"
+    },
+    "tabs": {
+      "settings": "Instellingen",
+      "countdown": "Timers",
+      "api": "API",
+      "information": "Informatie",
+      "examples": "Voorbeelden"
+    },
+    "api": {
+      "title": "API gebruiken",
+      "intro": "Gebruik de triggerkaart in Advanced Flow om een route en HTTP-methode te registreren.",
+      "routeTitle": "Voorbeeld van een route",
+      "routeText": "De slash aan het begin is optioneel. informatie en /informatie verwijzen naar dezelfde route.",
+      "methodsTitle": "HTTP-methoden",
+      "methodsText": "Gebruik POST, PUT en PATCH voor JSON-data. Gebruik GET om data op te vragen en DELETE om een actie of resource te verwijderen.",
+      "responseTitle": "Antwoord vanuit Flow",
+      "responseText": "Gebruik de actiekaart Reageer met... om een JSON-antwoord terug te sturen, of Reageer met 200 voor een eenvoudige bevestiging.",
+      "fieldTitle": "Een enkele waarde opvragen",
+      "fieldText": "Voeg ?veld= toe aan een GET-request om een enkele eigenschap uit het Flow-antwoord op te vragen. field= is ook mogelijk. De eigenschap mag rechtstreeks in het antwoord of binnen data staan."
+    },
+    "countdown": {
+      "title": "Afteltimers",
+      "intro": "Maak hier timers aan en selecteer ze daarna in de countdown-flowkaarten.",
+      "namePlaceholder": "Naam van de timer",
+      "add": "Timer toevoegen",
+      "remove": "Verwijderen",
+      "export": "Timers exporteren",
+      "import": "Timers importeren",
+      "saved": "Afteltimers opgeslagen.",
+      "invalidName": "Een timernaam moet 1 tot 80 tekens bevatten.",
+      "duplicateName": "Timernamen moeten uniek zijn.",
+      "invalidImport": "De timerlijst mag alleen namen bevatten.",
+      "importFailed": "Het timerbestand kon niet worden gelezen."
+    },
+    "information": {
+      "title": "Werking van de API-instellingen",
+      "intro": "Configureer hier de lokale HTTP-server. Wijzigingen worden na het opslaan toegepast; Homey kan aangeven dat een herstart nodig is.",
+      "serverTitle": "Serverinstellingen",
+      "serverText": "De poort bepaalt waarop de API luistert. CORS bepaalt of browserclients cross-origin aanvragen mogen doen. Access-Control-Allow-Origin beperkt welke origin is toegestaan wanneer CORS is ingeschakeld.",
+      "routesTitle": "Routes en methoden",
+      "routesText": "Maak een trigger-flow met bijvoorbeeld de route informatie en kies de HTTP-methode. Een slash aan het begin is optioneel: informatie en /informatie zijn gelijk.",
+      "methodsText": "De ondersteunde methoden zijn GET, POST, PUT, PATCH, DELETE, HEAD en OPTIONS. POST, PUT en PATCH kunnen JSON in de request-body ontvangen.",
+      "tokenTitle": "API-token",
+      "tokenText": "Schakel token-authenticatie in en genereer een token. De aanbevolen methode is de Authorization-header. Voor eenvoudige URL-clients voeg je het token toe zoals hieronder.",
+      "headerText": "Het token wordt gecontroleerd voordat een Homey-flow start. Een nieuw token maakt het oude token ongeldig. Deel het token niet en stel de API-poort niet rechtstreeks bloot aan het openbare internet."
+    },
+    "examples": {
+      "title": "Voorbeelden van requests",
+      "intro": "Registreer de route en methode in een Advanced Flow-trigger en gebruik daarna een van deze requests vanuit een client of HomeyScript.",
+      "get1": "Vraag de huidige status op.",
+      "get2": "Vraag een waarde van een specifieke kamer op.",
+      "get3": "Vraag alle beschikbare gegevens op.",
+      "get4": "Vraag een enkele waarde uit het antwoord op.",
+      "post1": "Maak een nieuw item aan.",
+      "post2": "Start een scene.",
+      "post3": "Stuur een gebeurtenis naar Homey.",
+      "put1": "Vervang een volledige apparaatconfiguratie.",
+      "put2": "Vervang een volledig schema.",
+      "put3": "Stel een volledige thermostaatstatus in.",
+      "patch1": "Wijzig alleen de helderheid.",
+      "patch2": "Wijzig alleen de gewenste temperatuur.",
+      "patch3": "Wijzig alleen de ingeschakelde status.",
+      "delete1": "Verwijder een opgeslagen apparaat.",
+      "delete2": "Verwijder een schema.",
+      "delete3": "Verwijder een tijdelijke waarde.",
+      "head1": "Controleer of een endpoint beschikbaar is zonder de response-body te downloaden.",
+      "head2": "Controleer of een apparaat-endpoint bestaat.",
+      "head3": "Controleer of de API bereikbaar is.",
+      "options1": "Vraag welke HTTP-methoden voor een route beschikbaar zijn.",
+      "options2": "Controleer de CORS-preflightresponse.",
+      "options3": "Bekijk de toegestane methoden voordat je een client koppelt.",
+      "tokenNote": "Als authenticatie is ingeschakeld, voeg ?token=abc toe aan de URL of gebruik Authorization: Bearer abc. POST-, PUT- en PATCH-body's moeten geldige JSON bevatten."
     },
     "save": "Opslaan",
     "saved": "Instellingen succesvol opgeslagen"

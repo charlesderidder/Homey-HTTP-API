@@ -48,6 +48,30 @@
           }
         },
         {
+          "id": "patch",
+          "label": {
+            "en": "PATCH",
+            "de": "PATCH",
+            "nl": "PATCH"
+          }
+        },
+        {
+          "id": "delete",
+          "label": {
+            "en": "DELETE",
+            "de": "DELETE",
+            "nl": "DELETE"
+          }
+        },
+        {
+          "id": "head",
+          "label": {
+            "en": "HEAD",
+            "de": "HEAD",
+            "nl": "HEAD"
+          }
+        },
+        {
           "id": "options",
           "label": {
             "en": "OPTIONS",

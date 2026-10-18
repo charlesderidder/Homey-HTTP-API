@@ -1,0 +1,41 @@
+{
+  "title": {
+    "en": "Start a random countdown timer",
+    "de": "Einen zufälligen Countdown starten",
+    "nl": "Start een willekeurige afteltimer"
+  },
+  "titleFormatted": {
+    "en": "Start timer [[timer]] for a random duration from [[min]] to [[max]] seconds",
+    "de": "Timer [[timer]] mit zufälliger Dauer von [[min]] bis [[max]] Sekunden starten",
+    "nl": "Start timer [[timer]] met een willekeurige duur van [[min]] tot [[max]] seconden"
+  },
+  "args": [
+    {
+      "type": "autocomplete",
+      "name": "timer",
+      "title": {
+        "en": "Timer",
+        "de": "Timer",
+        "nl": "Timer"
+      }
+    },
+    {
+      "type": "number",
+      "name": "min",
+      "title": {
+        "en": "Minimum seconds",
+        "de": "Minimale Sekunden",
+        "nl": "Minimum aantal seconden"
+      }
+    },
+    {
+      "type": "number",
+      "name": "max",
+      "title": {
+        "en": "Maximum seconds",
+        "de": "Maximale Sekunden",
+        "nl": "Maximum aantal seconden"
+      }
+    }
+  ]
+}

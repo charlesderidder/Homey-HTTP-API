@@ -1,0 +1,59 @@
+{
+  "title": {
+    "en": "Countdown timer value is less or greater than",
+    "de": "Countdown-Wert ist kleiner oder größer als",
+    "nl": "Afteltimerwaarde is kleiner of groter dan"
+  },
+  "titleFormatted": {
+    "en": "Timer [[timer]] is [[comparison]] [[value]]",
+    "de": "Timer [[timer]] ist [[comparison]] [[value]]",
+    "nl": "Timer [[timer]] is [[comparison]] [[value]]"
+  },
+  "args": [
+    {
+      "type": "autocomplete",
+      "name": "timer",
+      "title": {
+        "en": "Timer",
+        "de": "Timer",
+        "nl": "Timer"
+      }
+    },
+    {
+      "type": "dropdown",
+      "name": "comparison",
+      "title": {
+        "en": "Comparison",
+        "de": "Vergleich",
+        "nl": "Vergelijking"
+      },
+      "values": [
+        {
+          "id": "less",
+          "label": {
+            "en": "less than",
+            "de": "kleiner als",
+            "nl": "kleiner dan"
+          }
+        },
+        {
+          "id": "greater",
+          "label": {
+            "en": "greater than",
+            "de": "größer als",
+            "nl": "groter dan"
+          }
+        }
+      ]
+    },
+    {
+      "type": "number",
+      "name": "value",
+      "title": {
+        "en": "Value",
+        "de": "Wert",
+        "nl": "Waarde"
+      }
+    }
+  ]
+}

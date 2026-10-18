@@ -1,6 +1,6 @@
 export interface LocalApiRequestArgs {
     url: string;
-    method: 'get' | 'post' | 'put' | 'options';
+    method: 'get' | 'post' | 'put' | 'patch' | 'delete' | 'head' | 'options';
     body?: string;
 }
 

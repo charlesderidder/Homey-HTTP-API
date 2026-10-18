@@ -1,0 +1,23 @@
+{
+  "title": {
+    "en": "Stop a countdown timer",
+    "de": "Einen Countdown stoppen",
+    "nl": "Stop een afteltimer"
+  },
+  "titleFormatted": {
+    "en": "Stop timer [[timer]]",
+    "de": "Timer [[timer]] stoppen",
+    "nl": "Stop timer [[timer]]"
+  },
+  "args": [
+    {
+      "type": "autocomplete",
+      "name": "timer",
+      "title": {
+        "en": "Timer",
+        "de": "Timer",
+        "nl": "Timer"
+      }
+    }
+  ]
+}

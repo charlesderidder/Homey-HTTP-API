@@ -1,0 +1,43 @@
+{
+  "title": {
+    "en": "A countdown timer reaches zero",
+    "de": "Ein Countdown erreicht null",
+    "nl": "Een afteltimer bereikt nul"
+  },
+  "titleFormatted": {
+    "en": "Timer [[timer]] reaches zero",
+    "de": "Timer [[timer]] erreicht null",
+    "nl": "Timer [[timer]] bereikt nul"
+  },
+  "args": [
+    {
+      "type": "autocomplete",
+      "name": "timer",
+      "title": {
+        "en": "Timer",
+        "de": "Timer",
+        "nl": "Timer"
+      }
+    }
+  ],
+  "tokens": [
+    {
+      "name": "timer",
+      "type": "string",
+      "title": {
+        "en": "Timer",
+        "de": "Timer",
+        "nl": "Timer"
+      }
+    },
+    {
+      "name": "value",
+      "type": "number",
+      "title": {
+        "en": "Value",
+        "de": "Wert",
+        "nl": "Waarde"
+      }
+    }
+  ]
+}

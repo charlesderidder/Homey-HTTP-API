@@ -1,0 +1,43 @@
+{
+  "title": {
+    "en": "A countdown timer is started or updated",
+    "de": "Ein Countdown wird gestartet oder aktualisiert",
+    "nl": "Een afteltimer wordt gestart of bijgewerkt"
+  },
+  "titleFormatted": {
+    "en": "Timer [[timer]] is started or updated",
+    "de": "Timer [[timer]] wird gestartet oder aktualisiert",
+    "nl": "Timer [[timer]] wordt gestart of bijgewerkt"
+  },
+  "args": [
+    {
+      "type": "autocomplete",
+      "name": "timer",
+      "title": {
+        "en": "Timer",
+        "de": "Timer",
+        "nl": "Timer"
+      }
+    }
+  ],
+  "tokens": [
+    {
+      "name": "timer",
+      "type": "string",
+      "title": {
+        "en": "Timer",
+        "de": "Timer",
+        "nl": "Timer"
+      }
+    },
+    {
+      "name": "value",
+      "type": "number",
+      "title": {
+        "en": "Value",
+        "de": "Wert",
+        "nl": "Waarde"
+      }
+    }
+  ]
+}

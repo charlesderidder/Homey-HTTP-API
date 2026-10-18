@@ -1,0 +1,52 @@
+{
+  "title": {
+    "en": "A countdown timer reaches a value",
+    "de": "Ein Countdown erreicht einen Wert",
+    "nl": "Een afteltimer bereikt een waarde"
+  },
+  "titleFormatted": {
+    "en": "Timer [[timer]] reaches [[value]]",
+    "de": "Timer [[timer]] erreicht [[value]]",
+    "nl": "Timer [[timer]] bereikt [[value]]"
+  },
+  "args": [
+    {
+      "type": "autocomplete",
+      "name": "timer",
+      "title": {
+        "en": "Timer",
+        "de": "Timer",
+        "nl": "Timer"
+      }
+    },
+    {
+      "type": "number",
+      "name": "value",
+      "title": {
+        "en": "Value",
+        "de": "Wert",
+        "nl": "Waarde"
+      }
+    }
+  ],
+  "tokens": [
+    {
+      "name": "timer",
+      "type": "string",
+      "title": {
+        "en": "Timer",
+        "de": "Timer",
+        "nl": "Timer"
+      }
+    },
+    {
+      "name": "value",
+      "type": "number",
+      "title": {
+        "en": "Value",
+        "de": "Wert",
+        "nl": "Waarde"
+      }
+    }
+  ]
+}

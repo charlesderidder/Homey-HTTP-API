@@ -1,0 +1,59 @@
+{
+  "title": {
+    "en": "Countdown timer has a value",
+    "de": "Countdown hat einen Wert",
+    "nl": "Afteltimer heeft een waarde"
+  },
+  "titleFormatted": {
+    "en": "Timer [[timer]] [[comparison]] [[value]]",
+    "de": "Timer [[timer]] [[comparison]] [[value]]",
+    "nl": "Timer [[timer]] [[comparison]] [[value]]"
+  },
+  "args": [
+    {
+      "type": "autocomplete",
+      "name": "timer",
+      "title": {
+        "en": "Timer",
+        "de": "Timer",
+        "nl": "Timer"
+      }
+    },
+    {
+      "type": "dropdown",
+      "name": "comparison",
+      "title": {
+        "en": "Comparison",
+        "de": "Vergleich",
+        "nl": "Vergelijking"
+      },
+      "values": [
+        {
+          "id": "is",
+          "label": {
+            "en": "is",
+            "de": "ist",
+            "nl": "is"
+          }
+        },
+        {
+          "id": "is_not",
+          "label": {
+            "en": "is not",
+            "de": "ist nicht",
+            "nl": "is niet"
+          }
+        }
+      ]
+    },
+    {
+      "type": "number",
+      "name": "value",
+      "title": {
+        "en": "Value",
+        "de": "Wert",
+        "nl": "Waarde"
+      }
+    }
+  ]
+}

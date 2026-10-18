@@ -1,0 +1,43 @@
+{
+  "title": {
+    "en": "A countdown timer is stopped before zero",
+    "de": "Ein Countdown wird vor null gestoppt",
+    "nl": "Een afteltimer wordt vóór nul gestopt"
+  },
+  "titleFormatted": {
+    "en": "Timer [[timer]] is stopped before zero",
+    "de": "Timer [[timer]] wird vor null gestoppt",
+    "nl": "Timer [[timer]] wordt vóór nul gestopt"
+  },
+  "args": [
+    {
+      "type": "autocomplete",
+      "name": "timer",
+      "title": {
+        "en": "Timer",
+        "de": "Timer",
+        "nl": "Timer"
+      }
+    }
+  ],
+  "tokens": [
+    {
+      "name": "timer",
+      "type": "string",
+      "title": {
+        "en": "Timer",
+        "de": "Timer",
+        "nl": "Timer"
+      }
+    },
+    {
+      "name": "value",
+      "type": "number",
+      "title": {
+        "en": "Value",
+        "de": "Wert",
+        "nl": "Waarde"
+      }
+    }
+  ]
+}

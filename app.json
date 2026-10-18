@@ -1,21 +1,21 @@
 {
   "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
   "id": "dev.charlesderidder.homeyhttpapi",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "compatibility": ">=8.1.1",
   "sdk": 3,
   "platforms": [
     "local"
   ],
   "name": {
-    "en": "HTTP API",
-    "de": "HTTP API",
-    "nl": "HTTP API"
+    "en": "Homey Toolkit",
+    "de": "Homey Toolkit",
+    "nl": "Homey Toolkit"
   },
   "description": {
-    "en": "HTTP API hosted and served directly from your Homey Hub",
-    "de": "HTTP-API direkt auf deinem Homey Hub gehostet und bereitgestellt",
-    "nl": "HTTP API rechtstreeks gehost en aangeboden door je Homey Hub"
+    "en": "A local HTTP API and configurable countdown timers for Homey flows",
+    "de": "Eine lokale HTTP-API und konfigurierbare Countdowns für Homey-Flows",
+    "nl": "Een lokale HTTP-API en instelbare afteltimers voor Homey-flows"
   },
   "category": [
     "internet"
@@ -59,6 +59,279 @@
   "source": "https://github.com/charlesderidder/homeylocalapi",
   "flow": {
     "triggers": [
+      {
+        "title": {
+          "en": "A countdown timer reaches a value",
+          "de": "Ein Countdown erreicht einen Wert",
+          "nl": "Een afteltimer bereikt een waarde"
+        },
+        "titleFormatted": {
+          "en": "Timer [[timer]] reaches [[value]]",
+          "de": "Timer [[timer]] erreicht [[value]]",
+          "nl": "Timer [[timer]] bereikt [[value]]"
+        },
+        "args": [
+          {
+            "type": "autocomplete",
+            "name": "timer",
+            "title": {
+              "en": "Timer",
+              "de": "Timer",
+              "nl": "Timer"
+            }
+          },
+          {
+            "type": "number",
+            "name": "value",
+            "title": {
+              "en": "Value",
+              "de": "Wert",
+              "nl": "Waarde"
+            }
+          }
+        ],
+        "tokens": [
+          {
+            "name": "timer",
+            "type": "string",
+            "title": {
+              "en": "Timer",
+              "de": "Timer",
+              "nl": "Timer"
+            }
+          },
+          {
+            "name": "value",
+            "type": "number",
+            "title": {
+              "en": "Value",
+              "de": "Wert",
+              "nl": "Waarde"
+            }
+          }
+        ],
+        "id": "countdown-reaches-value"
+      },
+      {
+        "title": {
+          "en": "A countdown timer reaches zero",
+          "de": "Ein Countdown erreicht null",
+          "nl": "Een afteltimer bereikt nul"
+        },
+        "titleFormatted": {
+          "en": "Timer [[timer]] reaches zero",
+          "de": "Timer [[timer]] erreicht null",
+          "nl": "Timer [[timer]] bereikt nul"
+        },
+        "args": [
+          {
+            "type": "autocomplete",
+            "name": "timer",
+            "title": {
+              "en": "Timer",
+              "de": "Timer",
+              "nl": "Timer"
+            }
+          }
+        ],
+        "tokens": [
+          {
+            "name": "timer",
+            "type": "string",
+            "title": {
+              "en": "Timer",
+              "de": "Timer",
+              "nl": "Timer"
+            }
+          },
+          {
+            "name": "value",
+            "type": "number",
+            "title": {
+              "en": "Value",
+              "de": "Wert",
+              "nl": "Waarde"
+            }
+          }
+        ],
+        "id": "countdown-reaches-zero"
+      },
+      {
+        "title": {
+          "en": "A countdown timer has started",
+          "de": "Ein Countdown wurde gestartet",
+          "nl": "Een afteltimer is gestart"
+        },
+        "titleFormatted": {
+          "en": "Timer [[timer]] has started",
+          "de": "Timer [[timer]] wurde gestartet",
+          "nl": "Timer [[timer]] is gestart"
+        },
+        "args": [
+          {
+            "type": "autocomplete",
+            "name": "timer",
+            "title": {
+              "en": "Timer",
+              "de": "Timer",
+              "nl": "Timer"
+            }
+          }
+        ],
+        "tokens": [
+          {
+            "name": "timer",
+            "type": "string",
+            "title": {
+              "en": "Timer",
+              "de": "Timer",
+              "nl": "Timer"
+            }
+          },
+          {
+            "name": "value",
+            "type": "number",
+            "title": {
+              "en": "Value",
+              "de": "Wert",
+              "nl": "Waarde"
+            }
+          }
+        ],
+        "id": "countdown-started"
+      },
+      {
+        "title": {
+          "en": "A countdown timer is started or updated",
+          "de": "Ein Countdown wird gestartet oder aktualisiert",
+          "nl": "Een afteltimer wordt gestart of bijgewerkt"
+        },
+        "titleFormatted": {
+          "en": "Timer [[timer]] is started or updated",
+          "de": "Timer [[timer]] wird gestartet oder aktualisiert",
+          "nl": "Timer [[timer]] wordt gestart of bijgewerkt"
+        },
+        "args": [
+          {
+            "type": "autocomplete",
+            "name": "timer",
+            "title": {
+              "en": "Timer",
+              "de": "Timer",
+              "nl": "Timer"
+            }
+          }
+        ],
+        "tokens": [
+          {
+            "name": "timer",
+            "type": "string",
+            "title": {
+              "en": "Timer",
+              "de": "Timer",
+              "nl": "Timer"
+            }
+          },
+          {
+            "name": "value",
+            "type": "number",
+            "title": {
+              "en": "Value",
+              "de": "Wert",
+              "nl": "Waarde"
+            }
+          }
+        ],
+        "id": "countdown-started-or-updated"
+      },
+      {
+        "title": {
+          "en": "A countdown timer is stopped before zero",
+          "de": "Ein Countdown wird vor null gestoppt",
+          "nl": "Een afteltimer wordt vóór nul gestopt"
+        },
+        "titleFormatted": {
+          "en": "Timer [[timer]] is stopped before zero",
+          "de": "Timer [[timer]] wird vor null gestoppt",
+          "nl": "Timer [[timer]] wordt vóór nul gestopt"
+        },
+        "args": [
+          {
+            "type": "autocomplete",
+            "name": "timer",
+            "title": {
+              "en": "Timer",
+              "de": "Timer",
+              "nl": "Timer"
+            }
+          }
+        ],
+        "tokens": [
+          {
+            "name": "timer",
+            "type": "string",
+            "title": {
+              "en": "Timer",
+              "de": "Timer",
+              "nl": "Timer"
+            }
+          },
+          {
+            "name": "value",
+            "type": "number",
+            "title": {
+              "en": "Value",
+              "de": "Wert",
+              "nl": "Waarde"
+            }
+          }
+        ],
+        "id": "countdown-stopped"
+      },
+      {
+        "title": {
+          "en": "A countdown timer value changes",
+          "de": "Der Wert eines Countdowns ändert sich",
+          "nl": "De waarde van een afteltimer verandert"
+        },
+        "titleFormatted": {
+          "en": "The value of timer [[timer]] changes",
+          "de": "Der Wert von Timer [[timer]] ändert sich",
+          "nl": "De waarde van timer [[timer]] verandert"
+        },
+        "args": [
+          {
+            "type": "autocomplete",
+            "name": "timer",
+            "title": {
+              "en": "Timer",
+              "de": "Timer",
+              "nl": "Timer"
+            }
+          }
+        ],
+        "tokens": [
+          {
+            "name": "timer",
+            "type": "string",
+            "title": {
+              "en": "Timer",
+              "de": "Timer",
+              "nl": "Timer"
+            }
+          },
+          {
+            "name": "value",
+            "type": "number",
+            "title": {
+              "en": "Value",
+              "de": "Wert",
+              "nl": "Waarde"
+            }
+          }
+        ],
+        "id": "countdown-value-changed"
+      },
       {
         "title": {
           "en": "An HTTP API request is received",
@@ -109,6 +382,30 @@
                 }
               },
               {
+                "id": "patch",
+                "label": {
+                  "en": "PATCH",
+                  "de": "PATCH",
+                  "nl": "PATCH"
+                }
+              },
+              {
+                "id": "delete",
+                "label": {
+                  "en": "DELETE",
+                  "de": "DELETE",
+                  "nl": "DELETE"
+                }
+              },
+              {
+                "id": "head",
+                "label": {
+                  "en": "HEAD",
+                  "de": "HEAD",
+                  "nl": "HEAD"
+                }
+              },
+              {
                 "id": "options",
                 "label": {
                   "en": "OPTIONS",
@@ -151,7 +448,419 @@
         "id": "local-api-request-received"
       }
     ],
+    "conditions": [
+      {
+        "title": {
+          "en": "Countdown timer has a value",
+          "de": "Countdown hat einen Wert",
+          "nl": "Afteltimer heeft een waarde"
+        },
+        "titleFormatted": {
+          "en": "Timer [[timer]] [[comparison]] [[value]]",
+          "de": "Timer [[timer]] [[comparison]] [[value]]",
+          "nl": "Timer [[timer]] [[comparison]] [[value]]"
+        },
+        "args": [
+          {
+            "type": "autocomplete",
+            "name": "timer",
+            "title": {
+              "en": "Timer",
+              "de": "Timer",
+              "nl": "Timer"
+            }
+          },
+          {
+            "type": "dropdown",
+            "name": "comparison",
+            "title": {
+              "en": "Comparison",
+              "de": "Vergleich",
+              "nl": "Vergelijking"
+            },
+            "values": [
+              {
+                "id": "is",
+                "label": {
+                  "en": "is",
+                  "de": "ist",
+                  "nl": "is"
+                }
+              },
+              {
+                "id": "is_not",
+                "label": {
+                  "en": "is not",
+                  "de": "ist nicht",
+                  "nl": "is niet"
+                }
+              }
+            ]
+          },
+          {
+            "type": "number",
+            "name": "value",
+            "title": {
+              "en": "Value",
+              "de": "Wert",
+              "nl": "Waarde"
+            }
+          }
+        ],
+        "id": "countdown-has-value"
+      },
+      {
+        "title": {
+          "en": "Countdown timer is paused",
+          "de": "Countdown ist pausiert",
+          "nl": "Afteltimer is gepauzeerd"
+        },
+        "titleFormatted": {
+          "en": "Timer [[timer]] is paused: [[expected]]",
+          "de": "Timer [[timer]] ist pausiert: [[expected]]",
+          "nl": "Timer [[timer]] is gepauzeerd: [[expected]]"
+        },
+        "args": [
+          {
+            "type": "autocomplete",
+            "name": "timer",
+            "title": {
+              "en": "Timer",
+              "de": "Timer",
+              "nl": "Timer"
+            }
+          },
+          {
+            "type": "dropdown",
+            "name": "expected",
+            "title": {
+              "en": "Is paused",
+              "de": "Ist pausiert",
+              "nl": "Is gepauzeerd"
+            },
+            "values": [
+              {
+                "id": "yes",
+                "label": {
+                  "en": "Yes",
+                  "de": "Ja",
+                  "nl": "Ja"
+                }
+              },
+              {
+                "id": "no",
+                "label": {
+                  "en": "No",
+                  "de": "Nein",
+                  "nl": "Nee"
+                }
+              }
+            ]
+          }
+        ],
+        "id": "countdown-is-paused"
+      },
+      {
+        "title": {
+          "en": "Countdown timer is running",
+          "de": "Countdown läuft",
+          "nl": "Afteltimer loopt"
+        },
+        "titleFormatted": {
+          "en": "Timer [[timer]] is running: [[expected]]",
+          "de": "Timer [[timer]] läuft: [[expected]]",
+          "nl": "Timer [[timer]] loopt: [[expected]]"
+        },
+        "args": [
+          {
+            "type": "autocomplete",
+            "name": "timer",
+            "title": {
+              "en": "Timer",
+              "de": "Timer",
+              "nl": "Timer"
+            }
+          },
+          {
+            "type": "dropdown",
+            "name": "expected",
+            "title": {
+              "en": "Is running",
+              "de": "Läuft",
+              "nl": "Loopt"
+            },
+            "values": [
+              {
+                "id": "yes",
+                "label": {
+                  "en": "Yes",
+                  "de": "Ja",
+                  "nl": "Ja"
+                }
+              },
+              {
+                "id": "no",
+                "label": {
+                  "en": "No",
+                  "de": "Nein",
+                  "nl": "Nee"
+                }
+              }
+            ]
+          }
+        ],
+        "id": "countdown-is-running"
+      },
+      {
+        "title": {
+          "en": "Countdown timer value is less or greater than",
+          "de": "Countdown-Wert ist kleiner oder größer als",
+          "nl": "Afteltimerwaarde is kleiner of groter dan"
+        },
+        "titleFormatted": {
+          "en": "Timer [[timer]] is [[comparison]] [[value]]",
+          "de": "Timer [[timer]] ist [[comparison]] [[value]]",
+          "nl": "Timer [[timer]] is [[comparison]] [[value]]"
+        },
+        "args": [
+          {
+            "type": "autocomplete",
+            "name": "timer",
+            "title": {
+              "en": "Timer",
+              "de": "Timer",
+              "nl": "Timer"
+            }
+          },
+          {
+            "type": "dropdown",
+            "name": "comparison",
+            "title": {
+              "en": "Comparison",
+              "de": "Vergleich",
+              "nl": "Vergelijking"
+            },
+            "values": [
+              {
+                "id": "less",
+                "label": {
+                  "en": "less than",
+                  "de": "kleiner als",
+                  "nl": "kleiner dan"
+                }
+              },
+              {
+                "id": "greater",
+                "label": {
+                  "en": "greater than",
+                  "de": "größer als",
+                  "nl": "groter dan"
+                }
+              }
+            ]
+          },
+          {
+            "type": "number",
+            "name": "value",
+            "title": {
+              "en": "Value",
+              "de": "Wert",
+              "nl": "Waarde"
+            }
+          }
+        ],
+        "id": "countdown-value-comparison"
+      }
+    ],
     "actions": [
+      {
+        "title": {
+          "en": "Adjust a countdown timer",
+          "de": "Einen Countdown anpassen",
+          "nl": "Pas een afteltimer aan"
+        },
+        "titleFormatted": {
+          "en": "Adjust timer [[timer]] by [[seconds]] seconds",
+          "de": "Timer [[timer]] um [[seconds]] Sekunden anpassen",
+          "nl": "Pas timer [[timer]] met [[seconds]] seconden aan"
+        },
+        "args": [
+          {
+            "type": "autocomplete",
+            "name": "timer",
+            "title": {
+              "en": "Timer",
+              "de": "Timer",
+              "nl": "Timer"
+            }
+          },
+          {
+            "type": "number",
+            "name": "seconds",
+            "title": {
+              "en": "Seconds (negative to decrease)",
+              "de": "Sekunden (negativ zum Verringern)",
+              "nl": "Seconden (negatief om te verlagen)"
+            }
+          }
+        ],
+        "id": "countdown-adjust"
+      },
+      {
+        "title": {
+          "en": "Pause a countdown timer",
+          "de": "Einen Countdown pausieren",
+          "nl": "Pauzeer een afteltimer"
+        },
+        "titleFormatted": {
+          "en": "Pause timer [[timer]]",
+          "de": "Timer [[timer]] pausieren",
+          "nl": "Pauzeer timer [[timer]]"
+        },
+        "args": [
+          {
+            "type": "autocomplete",
+            "name": "timer",
+            "title": {
+              "en": "Timer",
+              "de": "Timer",
+              "nl": "Timer"
+            }
+          }
+        ],
+        "id": "countdown-pause"
+      },
+      {
+        "title": {
+          "en": "Resume a countdown timer",
+          "de": "Einen Countdown fortsetzen",
+          "nl": "Hervat een afteltimer"
+        },
+        "titleFormatted": {
+          "en": "Resume timer [[timer]]",
+          "de": "Timer [[timer]] fortsetzen",
+          "nl": "Hervat timer [[timer]]"
+        },
+        "args": [
+          {
+            "type": "autocomplete",
+            "name": "timer",
+            "title": {
+              "en": "Timer",
+              "de": "Timer",
+              "nl": "Timer"
+            }
+          }
+        ],
+        "id": "countdown-resume"
+      },
+      {
+        "title": {
+          "en": "Start a countdown timer",
+          "de": "Einen Countdown starten",
+          "nl": "Start een afteltimer"
+        },
+        "titleFormatted": {
+          "en": "Start timer [[timer]] for [[seconds]] seconds",
+          "de": "Timer [[timer]] für [[seconds]] Sekunden starten",
+          "nl": "Start timer [[timer]] voor [[seconds]] seconden"
+        },
+        "args": [
+          {
+            "type": "autocomplete",
+            "name": "timer",
+            "title": {
+              "en": "Timer",
+              "de": "Timer",
+              "nl": "Timer"
+            }
+          },
+          {
+            "type": "number",
+            "name": "seconds",
+            "title": {
+              "en": "Seconds",
+              "de": "Sekunden",
+              "nl": "Seconden"
+            }
+          }
+        ],
+        "id": "countdown-start"
+      },
+      {
+        "title": {
+          "en": "Start a random countdown timer",
+          "de": "Einen zufälligen Countdown starten",
+          "nl": "Start een willekeurige afteltimer"
+        },
+        "titleFormatted": {
+          "en": "Start timer [[timer]] for a random duration from [[min]] to [[max]] seconds",
+          "de": "Timer [[timer]] mit zufälliger Dauer von [[min]] bis [[max]] Sekunden starten",
+          "nl": "Start timer [[timer]] met een willekeurige duur van [[min]] tot [[max]] seconden"
+        },
+        "args": [
+          {
+            "type": "autocomplete",
+            "name": "timer",
+            "title": {
+              "en": "Timer",
+              "de": "Timer",
+              "nl": "Timer"
+            }
+          },
+          {
+            "type": "number",
+            "name": "min",
+            "title": {
+              "en": "Minimum seconds",
+              "de": "Minimale Sekunden",
+              "nl": "Minimum aantal seconden"
+            }
+          },
+          {
+            "type": "number",
+            "name": "max",
+            "title": {
+              "en": "Maximum seconds",
+              "de": "Maximale Sekunden",
+              "nl": "Maximum aantal seconden"
+            }
+          }
+        ],
+        "id": "countdown-start-random"
+      },
+      {
+        "title": {
+          "en": "Stop a countdown timer",
+          "de": "Einen Countdown stoppen",
+          "nl": "Stop een afteltimer"
+        },
+        "titleFormatted": {
+          "en": "Stop timer [[timer]]",
+          "de": "Timer [[timer]] stoppen",
+          "nl": "Stop timer [[timer]]"
+        },
+        "args": [
+          {
+            "type": "autocomplete",
+            "name": "timer",
+            "title": {
+              "en": "Timer",
+              "de": "Timer",
+              "nl": "Timer"
+            }
+          }
+        ],
+        "id": "countdown-stop"
+      },
+      {
+        "title": {
+          "en": "Stop all countdown timers",
+          "de": "Alle Countdowns stoppen",
+          "nl": "Stop alle afteltimers"
+        },
+        "id": "countdown-stop-all"
+      },
       {
         "title": {
           "en": "Respond with 200",

@@ -1,6 +1,6 @@
 {
   "settings": {
-    "title": "HTTP API",
+    "title": "Homey Toolkit",
     "subtitle": "App-Einstellungen",
     "serverSettings": "Server-Einstellungen",
     "port": {
@@ -15,6 +15,88 @@
     "corsAccessControlAllowOrigin": {
       "label": "Access-Control-Allow-Origin (Standard: *)"
     },
+    "authentication": {
+      "title": "API-Authentifizierung",
+      "label": "API-Token-Authentifizierung",
+      "disabled": "Deaktiviert",
+      "enabled": "Aktiviert",
+      "tokenLabel": "API-Token",
+      "show": "Anzeigen",
+      "generate": "Neues Token generieren",
+      "usage": "In der URL verwenden: /informatie?token=abc"
+    },
+      "tabs": {
+        "settings": "Einstellungen",
+        "countdown": "Timer",
+        "api": "API",
+        "information": "Informationen",
+        "examples": "Beispiele"
+      },
+      "api": {
+        "title": "API verwenden",
+        "intro": "Verwende die Triggerkarte in Advanced Flow, um eine Route und HTTP-Methode zu registrieren.",
+        "routeTitle": "Beispielroute",
+        "routeText": "Der führende Schrägstrich ist optional. information und /information verweisen auf dieselbe Route.",
+        "methodsTitle": "HTTP-Methoden",
+        "methodsText": "Verwende POST, PUT und PATCH für JSON-Daten. Verwende GET zum Abrufen von Daten und DELETE zum Entfernen einer Aktion oder Ressource.",
+        "responseTitle": "Antwort aus Flow",
+        "responseText": "Verwende die Aktion Reagieren mit..., um eine JSON-Antwort zu senden, oder Reagieren mit 200 für eine einfache Bestätigung.",
+        "fieldTitle": "Einen einzelnen Wert abrufen",
+        "fieldText": "Füge ?field= zu einer GET-Anfrage hinzu, um eine Eigenschaft aus der Flow-Antwort abzurufen. ?veld= wird ebenfalls unterstützt. Die Eigenschaft kann direkt in der Antwort oder innerhalb von data stehen."
+      },
+      "countdown": {
+        "title": "Countdown-Timer",
+        "intro": "Erstelle hier Timer und wähle sie anschließend in den Countdown-Flow-Karten aus.",
+        "namePlaceholder": "Timername",
+        "add": "Timer hinzufügen",
+        "remove": "Entfernen",
+        "export": "Timer exportieren",
+        "import": "Timer importieren",
+        "saved": "Countdown-Timer gespeichert.",
+        "invalidName": "Timer-Namen müssen zwischen 1 und 80 Zeichen lang sein.",
+        "duplicateName": "Timer-Namen müssen eindeutig sein.",
+        "invalidImport": "Die Timerliste darf nur Namen enthalten.",
+        "importFailed": "Die Timerdatei konnte nicht gelesen werden."
+      },
+      "information": {
+        "title": "Funktionsweise der API-Einstellungen",
+        "intro": "Konfiguriere hier den lokalen HTTP-Server. Änderungen werden nach dem Speichern übernommen; Homey kann einen Neustart verlangen.",
+        "serverTitle": "Server-Einstellungen",
+        "serverText": "Der Port legt fest, wo die API lauscht. CORS steuert, ob Browser-Clients Cross-Origin-Anfragen senden dürfen. Access-Control-Allow-Origin begrenzt die erlaubte Origin bei aktiviertem CORS.",
+        "routesTitle": "Routen und Methoden",
+        "routesText": "Erstelle eine Trigger-Flow mit einer Route wie information und wähle die HTTP-Methode. Ein führender Schrägstrich ist optional.",
+        "methodsText": "Unterstützt werden GET, POST, PUT, PATCH, DELETE, HEAD und OPTIONS. POST, PUT und PATCH können JSON im Request-Body empfangen.",
+        "tokenTitle": "API-Token",
+        "tokenText": "Aktiviere die Token-Authentifizierung und generiere ein Token. Die empfohlene Methode ist der Authorization-Header. Für einfache URL-Clients kann das Token wie unten gezeigt ergänzt werden.",
+        "headerText": "Das Token wird geprüft, bevor ein Homey-Flow startet. Ein neues Token macht das alte ungültig. Teile das Token nicht und veröffentliche den API-Port nicht direkt im Internet."
+      },
+      "examples": {
+        "title": "Beispiele für Requests",
+        "intro": "Registriere Route und Methode in einer Advanced-Flow-Triggerkarte und verwende anschließend eines dieser Beispiele aus einem Client oder HomeyScript.",
+        "get1": "Aktuellen Status abrufen.",
+        "get2": "Einen Wert eines bestimmten Raums abrufen.",
+        "get3": "Alle verfügbaren Daten abrufen.",
+        "get4": "Einen einzelnen Wert aus der Antwort abrufen.",
+        "post1": "Ein neues Element erstellen.",
+        "post2": "Eine Szene starten.",
+        "post3": "Ein Ereignis an Homey senden.",
+        "put1": "Eine vollständige Gerätekonfiguration ersetzen.",
+        "put2": "Einen vollständigen Zeitplan ersetzen.",
+        "put3": "Einen vollständigen Thermostatstatus setzen.",
+        "patch1": "Nur die Helligkeit ändern.",
+        "patch2": "Nur die Zieltemperatur ändern.",
+        "patch3": "Nur den Aktivierungsstatus ändern.",
+        "delete1": "Ein gespeichertes Gerät entfernen.",
+        "delete2": "Einen Zeitplan entfernen.",
+        "delete3": "Einen temporären Wert löschen.",
+        "head1": "Prüfen, ob ein Endpoint verfügbar ist, ohne den Response-Body zu laden.",
+        "head2": "Prüfen, ob ein Geräte-Endpoint existiert.",
+        "head3": "Prüfen, ob die API erreichbar ist.",
+        "options1": "Abfragen, welche HTTP-Methoden für eine Route verfügbar sind.",
+        "options2": "Die CORS-Preflight-Antwort prüfen.",
+        "options3": "Erlaubte Methoden vor der Integration eines Clients prüfen.",
+        "tokenNote": "Wenn die Authentifizierung aktiviert ist, füge ?token=abc zur URL hinzu oder verwende Authorization: Bearer abc. POST-, PUT- und PATCH-Bodies müssen gültiges JSON enthalten."
+      },
     "save": "Speichern",
     "saved": "Einstellungen erfolgreich gespeichert"
   }

@@ -1,0 +1,32 @@
+{
+  "title": {
+    "en": "Start a countdown timer",
+    "de": "Einen Countdown starten",
+    "nl": "Start een afteltimer"
+  },
+  "titleFormatted": {
+    "en": "Start timer [[timer]] for [[seconds]] seconds",
+    "de": "Timer [[timer]] für [[seconds]] Sekunden starten",
+    "nl": "Start timer [[timer]] voor [[seconds]] seconden"
+  },
+  "args": [
+    {
+      "type": "autocomplete",
+      "name": "timer",
+      "title": {
+        "en": "Timer",
+        "de": "Timer",
+        "nl": "Timer"
+      }
+    },
+    {
+      "type": "number",
+      "name": "seconds",
+      "title": {
+        "en": "Seconds",
+        "de": "Sekunden",
+        "nl": "Seconden"
+      }
+    }
+  ]
+}

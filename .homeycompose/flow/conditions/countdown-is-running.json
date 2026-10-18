@@ -1,0 +1,50 @@
+{
+  "title": {
+    "en": "Countdown timer is running",
+    "de": "Countdown läuft",
+    "nl": "Afteltimer loopt"
+  },
+  "titleFormatted": {
+    "en": "Timer [[timer]] is running: [[expected]]",
+    "de": "Timer [[timer]] läuft: [[expected]]",
+    "nl": "Timer [[timer]] loopt: [[expected]]"
+  },
+  "args": [
+    {
+      "type": "autocomplete",
+      "name": "timer",
+      "title": {
+        "en": "Timer",
+        "de": "Timer",
+        "nl": "Timer"
+      }
+    },
+    {
+      "type": "dropdown",
+      "name": "expected",
+      "title": {
+        "en": "Is running",
+        "de": "Läuft",
+        "nl": "Loopt"
+      },
+      "values": [
+        {
+          "id": "yes",
+          "label": {
+            "en": "Yes",
+            "de": "Ja",
+            "nl": "Ja"
+          }
+        },
+        {
+          "id": "no",
+          "label": {
+            "en": "No",
+            "de": "Nein",
+            "nl": "Nee"
+          }
+        }
+      ]
+    }
+  ]
+}

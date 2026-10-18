@@ -1,0 +1,32 @@
+{
+  "title": {
+    "en": "Adjust a countdown timer",
+    "de": "Einen Countdown anpassen",
+    "nl": "Pas een afteltimer aan"
+  },
+  "titleFormatted": {
+    "en": "Adjust timer [[timer]] by [[seconds]] seconds",
+    "de": "Timer [[timer]] um [[seconds]] Sekunden anpassen",
+    "nl": "Pas timer [[timer]] met [[seconds]] seconden aan"
+  },
+  "args": [
+    {
+      "type": "autocomplete",
+      "name": "timer",
+      "title": {
+        "en": "Timer",
+        "de": "Timer",
+        "nl": "Timer"
+      }
+    },
+    {
+      "type": "number",
+      "name": "seconds",
+      "title": {
+        "en": "Seconds (negative to decrease)",
+        "de": "Sekunden (negativ zum Verringern)",
+        "nl": "Seconden (negatief om te verlagen)"
+      }
+    }
+  ]
+}

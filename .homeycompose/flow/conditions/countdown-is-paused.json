@@ -1,0 +1,50 @@
+{
+  "title": {
+    "en": "Countdown timer is paused",
+    "de": "Countdown ist pausiert",
+    "nl": "Afteltimer is gepauzeerd"
+  },
+  "titleFormatted": {
+    "en": "Timer [[timer]] is paused: [[expected]]",
+    "de": "Timer [[timer]] ist pausiert: [[expected]]",
+    "nl": "Timer [[timer]] is gepauzeerd: [[expected]]"
+  },
+  "args": [
+    {
+      "type": "autocomplete",
+      "name": "timer",
+      "title": {
+        "en": "Timer",
+        "de": "Timer",
+        "nl": "Timer"
+      }
+    },
+    {
+      "type": "dropdown",
+      "name": "expected",
+      "title": {
+        "en": "Is paused",
+        "de": "Ist pausiert",
+        "nl": "Is gepauzeerd"
+      },
+      "values": [
+        {
+          "id": "yes",
+          "label": {
+            "en": "Yes",
+            "de": "Ja",
+            "nl": "Ja"
+          }
+        },
+        {
+          "id": "no",
+          "label": {
+            "en": "No",
+            "de": "Nein",
+            "nl": "Nee"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 {
   "settings": {
-    "title": "HTTP API",
+    "title": "Homey Toolkit",
     "subtitle": "App Settings",
     "serverSettings": "Server Settings",
     "port": {
@@ -14,6 +14,88 @@
     },
     "corsAccessControlAllowOrigin": {
       "label": "Access-Control-Allow-Origin (default: *)"
+    },
+    "authentication": {
+      "title": "API authentication",
+      "label": "API token authentication",
+      "disabled": "Disabled",
+      "enabled": "Enabled",
+      "tokenLabel": "API token",
+      "show": "Show",
+      "generate": "Generate new token",
+      "usage": "Use in the URL: /informatie?token=abc"
+    },
+    "tabs": {
+      "settings": "Settings",
+      "countdown": "Timers",
+      "api": "API",
+      "information": "Information",
+      "examples": "Examples"
+    },
+    "api": {
+      "title": "Using the API",
+      "intro": "Use the trigger card in Advanced Flow to register a route and HTTP method.",
+      "routeTitle": "Example route",
+      "routeText": "The leading slash is optional. informatie and /informatie refer to the same route.",
+      "methodsTitle": "HTTP methods",
+      "methodsText": "Use POST, PUT, and PATCH for JSON data. Use GET to retrieve data and DELETE to remove an action or resource.",
+      "responseTitle": "Respond from Flow",
+      "responseText": "Use the Respond with... action card to send a JSON response, or Respond with 200 for a simple confirmation.",
+      "fieldTitle": "Read a single value",
+      "fieldText": "Add ?field= to a GET request to read one property from the Flow response. ?veld= is also supported. The property may be directly in the response or inside data."
+    },
+    "countdown": {
+      "title": "Countdown timers",
+      "intro": "Create timers here, then select them in the countdown flow cards.",
+      "namePlaceholder": "Timer name",
+      "add": "Add timer",
+      "remove": "Remove",
+      "export": "Export timers",
+      "import": "Import timers",
+      "saved": "Countdown timers saved.",
+      "invalidName": "Timer names must contain between 1 and 80 characters.",
+      "duplicateName": "Timer names must be unique.",
+      "invalidImport": "The timer list must contain only names.",
+      "importFailed": "Could not read the timer export file."
+    },
+    "information": {
+      "title": "How the API settings work",
+      "intro": "Configure the local HTTP server here. Changes are applied after saving; Homey may indicate that a restart is required.",
+      "serverTitle": "Server settings",
+      "serverText": "Port determines where the API listens. CORS controls whether browser clients may make cross-origin requests. Access-Control-Allow-Origin limits which origin is allowed when CORS is enabled.",
+      "routesTitle": "Routes and methods",
+      "routesText": "Create a trigger flow with a route such as informatie and select its HTTP method. A leading slash is optional, so informatie and /informatie are equivalent.",
+      "methodsText": "Supported methods are GET, POST, PUT, PATCH, DELETE, HEAD, and OPTIONS. POST, PUT, and PATCH can receive JSON in the request body.",
+      "tokenTitle": "API token",
+      "tokenText": "Enable token authentication and generate a token. The recommended method is the Authorization header. For simple URL clients, add the token as shown below.",
+      "headerText": "The token is checked before a Homey flow starts. Generating a new token invalidates the old token. Do not share the token or expose the API port directly to the public internet."
+    },
+    "examples": {
+      "title": "Request examples",
+      "intro": "Register the route and method in an Advanced Flow trigger, then use one of these requests from a client or HomeyScript.",
+      "get1": "Read the current status.",
+      "get2": "Read a specific room value.",
+      "get3": "Read all available data.",
+      "get4": "Read a single value from the response.",
+      "post1": "Create a new item.",
+      "post2": "Start a scene.",
+      "post3": "Send an event to Homey.",
+      "put1": "Replace a complete device configuration.",
+      "put2": "Replace a complete schedule.",
+      "put3": "Set a complete thermostat state.",
+      "patch1": "Change only the brightness.",
+      "patch2": "Change only the target temperature.",
+      "patch3": "Change only the enabled state.",
+      "delete1": "Remove a saved device.",
+      "delete2": "Remove a schedule.",
+      "delete3": "Clear a temporary value.",
+      "head1": "Check whether an endpoint is available without downloading its response.",
+      "head2": "Check whether a device endpoint exists.",
+      "head3": "Check whether the API is reachable.",
+      "options1": "Ask which HTTP methods are available for a route.",
+      "options2": "Check the CORS preflight response.",
+      "options3": "Inspect the allowed methods before integrating a client.",
+      "tokenNote": "When authentication is enabled, add ?token=abc to the URL or use Authorization: Bearer abc. POST, PUT, and PATCH bodies must contain valid JSON."
     },
     "save": "Save",
     "saved": "Settings saved successfully"

@@ -13,5 +13,8 @@
   },
   "1.4": {
     "en": "Small bugfixed"
+  },
+  "1.0.5": {
+    "en": "Added API token authentication with secure token generation, token visibility controls, and Bearer or URL token support. Added Settings, API, and Information tabs with localized explanations. Added support for GET, POST, PUT, PATCH, DELETE, HEAD, and OPTIONS, route normalization, JSON validation, CORS handling, and improved settings layout."
   }
 }

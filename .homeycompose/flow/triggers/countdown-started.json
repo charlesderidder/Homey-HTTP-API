@@ -1,0 +1,43 @@
+{
+  "title": {
+    "en": "A countdown timer has started",
+    "de": "Ein Countdown wurde gestartet",
+    "nl": "Een afteltimer is gestart"
+  },
+  "titleFormatted": {
+    "en": "Timer [[timer]] has started",
+    "de": "Timer [[timer]] wurde gestartet",
+    "nl": "Timer [[timer]] is gestart"
+  },
+  "args": [
+    {
+      "type": "autocomplete",
+      "name": "timer",
+      "title": {
+        "en": "Timer",
+        "de": "Timer",
+        "nl": "Timer"
+      }
+    }
+  ],
+  "tokens": [
+    {
+      "name": "timer",
+      "type": "string",
+      "title": {
+        "en": "Timer",
+        "de": "Timer",
+        "nl": "Timer"
+      }
+    },
+    {
+      "name": "value",
+      "type": "number",
+      "title": {
+        "en": "Value",
+        "de": "Wert",
+        "nl": "Waarde"
+      }
+    }
+  ]
+}

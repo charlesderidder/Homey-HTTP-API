@@ -2,7 +2,161 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>HTTP API Settings</title>
+  <title>Homey Toolkit Settings</title>
+  <style>
+    body {
+      width: min(1200px, 100%);
+      max-width: 1200px!important;
+      margin: 0 auto;
+      padding: 0 12px 12px;
+      box-sizing: border-box;
+    }
+
+    .homey-form-fieldset {
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .settings-tabs {
+      display: flex!important;
+      gap: 4px!important;
+      margin: 4px 0 0px!important;
+      border-bottom: 0!important;
+    }
+
+    .settings-tab {
+      min-height: 30px!important;
+      background: transparent!important;
+    }
+
+    .settings-tab.active {
+      border-bottom: 3px solid #d32f2f !important;
+      color: #d32f2f;
+    }
+
+    .settings-panel[hidden] {
+      display: none;
+    }
+
+    .information-content {
+      line-height: 1.5;
+    }
+
+    .information-content h2 {
+      margin: 0 0 8px;
+    }
+
+    .information-content h3 {
+      margin: 20px 0 6px;
+    }
+
+    .information-content code {
+      background: #f1f2f4;
+      border-radius: 3px;
+      padding: 2px 5px;
+    }
+
+    .request-example {
+      border-left: 3px solid #d32f2f;
+      margin: 16px 0;
+      padding-left: 12px;
+    }
+
+    .request-example h3 {
+      margin-top: 0;
+    }
+
+    .request-example pre {
+      background: #f1f2f4;
+      border-radius: 3px;
+      overflow-x: auto;
+      padding: 10px;
+      white-space: pre-wrap;
+    }
+
+    .homey-form-group {
+      display: grid !important;
+      grid-template-columns: minmax(180px, 34%) minmax(0, 1fr);
+      align-items: center;
+      column-gap: 16px;
+    }
+
+    .homey-form-label {
+      margin-bottom: 0;
+    }
+
+    .homey-form-label::after {
+      content: ':';
+    }
+
+    .token-controls {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .token-controls .homey-button-secondary {
+      white-space: nowrap;
+    }
+
+    .token-controls #generate-token {
+      grid-column: 1 / -1;
+    }
+
+    .countdown-timers {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .countdown-timer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 8px 0;
+      border-bottom: 1px solid #e5e5e5;
+    }
+
+    .countdown-controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin: 12px 0;
+    }
+
+    .countdown-controls .homey-form-input {
+      flex: 1 1 220px;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 0 12px 20px;
+      }
+
+      .homey-form-group {
+        display: block !important;
+      }
+
+      .homey-form-label {
+        margin-bottom: 6px;
+      }
+
+      .token-controls {
+        grid-template-columns: 1fr;
+      }
+
+      .token-controls #generate-token {
+        grid-column: auto;
+      }
+
+      .countdown-timer {
+        align-items: flex-start;
+      }
+    }
+  </style>
   <script
       type="text/javascript"
       src="/homey.js"
@@ -19,6 +173,15 @@
   </p>
 </header>
 
+<div class="settings-tabs" role="tablist">
+  <button type="button" class="settings-tab active" id="settings-tab" role="tab" aria-selected="true" data-i18n="settings.tabs.settings">Instellingen</button>
+  <button type="button" class="settings-tab" id="countdown-tab" role="tab" aria-selected="false" data-i18n="settings.tabs.countdown">Timers</button>
+  <button type="button" class="settings-tab" id="api-tab" role="tab" aria-selected="false" data-i18n="settings.tabs.api">API</button>
+  <button type="button" class="settings-tab" id="information-tab" role="tab" aria-selected="false" data-i18n="settings.tabs.information">Informatie</button>
+  <button type="button" class="settings-tab" id="examples-tab" role="tab" aria-selected="false" data-i18n="settings.tabs.examples">Voorbeelden</button>
+</div>
+
+<section class="settings-panel" id="settings-panel" role="tabpanel">
 <fieldset class="homey-form-fieldset">
   <legend class="homey-form-legend" data-i18n="settings.serverSettings">Server Settings</legend>
   
@@ -41,6 +204,162 @@
 
 <button id="save" class="homey-button-primary-full" data-i18n="settings.save">Save</button>
 <p id="save-confirmation" data-i18n="settings.saved" style="display: none; color: green; margin-top: 8px;"></p>
+</section>
+
+<section class="settings-panel" id="countdown-panel" role="tabpanel" hidden>
+  <div class="information-content">
+    <h2 data-i18n="settings.countdown.title">Countdown timers</h2>
+    <p data-i18n="settings.countdown.intro">Create timers here, then select them in the countdown flow cards.</p>
+    <ul id="countdown-timers" class="countdown-timers"></ul>
+    <div class="countdown-controls">
+      <input class="homey-form-input" id="countdown-name" type="text" maxlength="80" data-i18n-placeholder="settings.countdown.namePlaceholder" placeholder="Timer name" />
+      <button type="button" id="countdown-add" class="homey-button-secondary" data-i18n="settings.countdown.add">Add timer</button>
+    </div>
+    <div class="countdown-controls">
+      <button type="button" id="countdown-export" class="homey-button-secondary" data-i18n="settings.countdown.export">Export timers</button>
+      <label class="homey-button-secondary" for="countdown-import" data-i18n="settings.countdown.import">Import timers</label>
+      <input id="countdown-import" type="file" accept="application/json,.json" hidden />
+    </div>
+    <p id="countdown-message" role="status" style="display: none;"></p>
+  </div>
+</section>
+
+<section class="settings-panel" id="api-panel" role="tabpanel" hidden>
+  <div class="information-content">
+    <h2 data-i18n="settings.api.title">API gebruiken</h2>
+    <p data-i18n="settings.api.intro">Gebruik de triggerkaart in Advanced Flow om een route en HTTP-methode te registreren.</p>
+    <h3 data-i18n="settings.api.routeTitle">Voorbeeld van een route</h3>
+    <p><code>/informatie</code></p>
+    <p data-i18n="settings.api.routeText">De slash aan het begin is optioneel. informatie en /informatie verwijzen naar dezelfde route.</p>
+    <h3 data-i18n="settings.api.methodsTitle">HTTP-methoden</h3>
+    <p><code>GET</code>, <code>POST</code>, <code>PUT</code>, <code>PATCH</code>, <code>DELETE</code>, <code>HEAD</code> en <code>OPTIONS</code></p>
+    <p data-i18n="settings.api.methodsText">Gebruik POST, PUT en PATCH voor JSON-data. Gebruik GET om data op te vragen en DELETE om een actie of resource te verwijderen.</p>
+    <h3 data-i18n="settings.api.responseTitle">Antwoord vanuit Flow</h3>
+    <p data-i18n="settings.api.responseText">Gebruik de actiekaart Reageer met... om een JSON-antwoord terug te sturen, of Reageer met 200 voor een eenvoudige bevestiging.</p>
+    <h3 data-i18n="settings.api.fieldTitle">Een enkele waarde opvragen</h3>
+    <p data-i18n="settings.api.fieldText">Voeg ?veld= toe aan een GET-request om een enkele eigenschap uit het Flow-antwoord op te vragen. field= is ook mogelijk. De eigenschap mag rechtstreeks in het antwoord of binnen data staan.</p>
+    <pre>GET /alles?veld=Zonsopkomst</pre>
+  </div>
+  <fieldset class="homey-form-fieldset">
+    <legend class="homey-form-legend" data-i18n="settings.authentication.title">API authentication</legend>
+    <div class="homey-form-group">
+      <label class="homey-form-label" for="auth-enabled" data-i18n="settings.authentication.label">API token authentication</label>
+      <select class="homey-form-select" id="auth-enabled">
+        <option value="false" data-i18n="settings.authentication.disabled">Disabled</option>
+        <option value="true" data-i18n="settings.authentication.enabled">Enabled</option>
+      </select>
+    </div>
+    <div class="homey-form-group">
+      <label class="homey-form-label" for="api-token" data-i18n="settings.authentication.tokenLabel">API token</label>
+      <div class="token-controls">
+        <input class="homey-form-input" id="api-token" type="password" autocomplete="off" />
+        <button type="button" id="toggle-token" class="homey-button-secondary" data-i18n="settings.authentication.show">Show</button>
+        <button type="button" id="generate-token" class="homey-button-secondary-full" data-i18n="settings.authentication.generate">Generate new token</button>
+        <small class="token-usage" data-i18n="settings.authentication.usage">Use in the URL: /informatie?token=abc</small>
+      </div>
+    </div>
+  </fieldset>
+  <button id="api-save" class="homey-button-primary-full" data-i18n="settings.save">Save</button>
+  <p id="api-save-confirmation" data-i18n="settings.saved" style="display: none; color: green; margin-top: 8px;"></p>
+</section>
+
+<section class="settings-panel" id="information-panel" role="tabpanel" hidden>
+  <div class="information-content">
+    <h2 data-i18n="settings.information.title">How the API settings work</h2>
+    <p data-i18n="settings.information.intro">Configure the local HTTP server here. Changes take effect after saving and restarting the app if Homey indicates that a restart is required.</p>
+    <h3 data-i18n="settings.information.serverTitle">Server settings</h3>
+    <p data-i18n="settings.information.serverText">Port determines where the API listens. CORS controls whether browser-based clients may make cross-origin requests. Access-Control-Allow-Origin limits which origin is allowed when CORS is enabled.</p>
+    <h3 data-i18n="settings.information.routesTitle">Routes and methods</h3>
+    <p data-i18n="settings.information.routesText">Create a trigger flow with a route such as informatie and select its HTTP method. A leading slash is optional, so informatie and /informatie are equivalent.</p>
+    <p data-i18n="settings.information.methodsText">Supported methods are GET, POST, PUT, PATCH, DELETE, HEAD, and OPTIONS. POST, PUT, and PATCH can receive JSON in the request body.</p>
+    <h3 data-i18n="settings.information.tokenTitle">API token</h3>
+    <p data-i18n="settings.information.tokenText">Enable token authentication and generate a token. The recommended format is the Authorization header. For simple URL clients, add the token as shown below.</p>
+    <p><code>/informatie?token=abc</code></p>
+    <p data-i18n="settings.information.headerText">The token is checked before a Homey flow starts. Generating a new token invalidates the old token. Do not share the token or expose the API port directly to the public internet.</p>
+  </div>
+</section>
+
+<section class="settings-panel" id="examples-panel" role="tabpanel" hidden>
+  <div class="information-content">
+    <h2 data-i18n="settings.examples.title">Request examples</h2>
+    <p data-i18n="settings.examples.intro">Register the route and method in an Advanced Flow trigger, then use one of these requests from a client or HomeyScript.</p>
+    <div class="request-example">
+      <h3>GET</h3>
+      <p data-i18n="settings.examples.get1">Read the current status.</p>
+      <pre>GET /informatie?token=abc</pre>
+      <p data-i18n="settings.examples.get2">Read a specific room value.</p>
+      <pre>GET /woonkamer/temperatuur?token=abc</pre>
+      <p data-i18n="settings.examples.get3">Read all available data.</p>
+      <pre>GET /alles?token=abc</pre>
+      <p data-i18n="settings.examples.get4">Read a single value from the response.</p>
+      <pre>GET /alles?veld=Zonsopkomst&amp;token=abc</pre>
+    </div>
+    <div class="request-example">
+      <h3>POST</h3>
+      <p data-i18n="settings.examples.post1">Create a new item.</p>
+      <pre>POST /apparaat
+{"name":"lamp woonkamer","type":"light"}</pre>
+      <p data-i18n="settings.examples.post2">Start a scene.</p>
+      <pre>POST /scene/avond
+{"brightness":40}</pre>
+      <p data-i18n="settings.examples.post3">Send an event to Homey.</p>
+      <pre>POST /event
+{"event":"deur geopend","source":"sensor"}</pre>
+    </div>
+    <div class="request-example">
+      <h3>PUT</h3>
+      <p data-i18n="settings.examples.put1">Replace a complete device configuration.</p>
+      <pre>PUT /apparaat/woonkamer
+{"enabled":true,"brightness":80}</pre>
+      <p data-i18n="settings.examples.put2">Replace a complete schedule.</p>
+      <pre>PUT /schema/avond
+{"start":"20:00","action":"on"}</pre>
+      <p data-i18n="settings.examples.put3">Set a complete thermostat state.</p>
+      <pre>PUT /thermostaat
+{"target":21,"mode":"heat"}</pre>
+    </div>
+    <div class="request-example">
+      <h3>PATCH</h3>
+      <p data-i18n="settings.examples.patch1">Change only the brightness.</p>
+      <pre>PATCH /apparaat/woonkamer
+{"brightness":50}</pre>
+      <p data-i18n="settings.examples.patch2">Change only the target temperature.</p>
+      <pre>PATCH /thermostaat
+{"target":20}</pre>
+      <p data-i18n="settings.examples.patch3">Change only the enabled state.</p>
+      <pre>PATCH /apparaat/woonkamer
+{"enabled":false}</pre>
+    </div>
+    <div class="request-example">
+      <h3>DELETE</h3>
+      <p data-i18n="settings.examples.delete1">Remove a saved device.</p>
+      <pre>DELETE /apparaat/test</pre>
+      <p data-i18n="settings.examples.delete2">Remove a schedule.</p>
+      <pre>DELETE /schema/avond</pre>
+      <p data-i18n="settings.examples.delete3">Clear a temporary value.</p>
+      <pre>DELETE /waarde/tijdelijk</pre>
+    </div>
+    <div class="request-example">
+      <h3>HEAD</h3>
+      <p data-i18n="settings.examples.head1">Check whether an endpoint is available without downloading its response.</p>
+      <pre>HEAD /informatie</pre>
+      <p data-i18n="settings.examples.head2">Check whether a device endpoint exists.</p>
+      <pre>HEAD /apparaat/woonkamer</pre>
+      <p data-i18n="settings.examples.head3">Check whether the API is reachable.</p>
+      <pre>HEAD /status</pre>
+    </div>
+    <div class="request-example">
+      <h3>OPTIONS</h3>
+      <p data-i18n="settings.examples.options1">Ask which HTTP methods are available for a route.</p>
+      <pre>OPTIONS /informatie</pre>
+      <p data-i18n="settings.examples.options2">Check the CORS preflight response.</p>
+      <pre>OPTIONS /apparaat</pre>
+      <p data-i18n="settings.examples.options3">Inspect the allowed methods before integrating a client.</p>
+      <pre>OPTIONS /api</pre>
+    </div>
+    <p data-i18n="settings.examples.tokenNote">When authentication is enabled, add ?token=abc to the URL or use Authorization: Bearer abc. POST, PUT, and PATCH bodies must contain valid JSON.</p>
+  </div>
+</section>
 
 <script type="text/javascript">
   function onHomeyReady(Homey) {
@@ -48,9 +367,32 @@
     const portInput = document.getElementById('server-port');
     const corsSelect = document.getElementById('cors-enabled');
     const saveButton = document.getElementById('save');
+    const apiSaveButton = document.getElementById('api-save');
     const additionalCorsSettings = document.getElementById('additional-cors-settings');
     const corsAcaoInput = document.getElementById('cors-acao');
     const saveConfirmation = document.getElementById('save-confirmation');
+    const apiSaveConfirmation = document.getElementById('api-save-confirmation');
+    const authEnabledSelect = document.getElementById('auth-enabled');
+    const apiTokenInput = document.getElementById('api-token');
+    const toggleTokenButton = document.getElementById('toggle-token');
+    const generateTokenButton = document.getElementById('generate-token');
+    const settingsTab = document.getElementById('settings-tab');
+    const countdownTab = document.getElementById('countdown-tab');
+    const apiTab = document.getElementById('api-tab');
+    const informationTab = document.getElementById('information-tab');
+    const examplesTab = document.getElementById('examples-tab');
+    const settingsPanel = document.getElementById('settings-panel');
+    const countdownPanel = document.getElementById('countdown-panel');
+    const apiPanel = document.getElementById('api-panel');
+    const informationPanel = document.getElementById('information-panel');
+    const examplesPanel = document.getElementById('examples-panel');
+    const countdownNameInput = document.getElementById('countdown-name');
+    const countdownTimersList = document.getElementById('countdown-timers');
+    const countdownAddButton = document.getElementById('countdown-add');
+    const countdownExportButton = document.getElementById('countdown-export');
+    const countdownImportInput = document.getElementById('countdown-import');
+    const countdownMessage = document.getElementById('countdown-message');
+    let countdownNames = [];
     let saveConfirmationTimeout;
 
     const showSaveConfirmation = () => {
@@ -58,6 +400,14 @@
       clearTimeout(saveConfirmationTimeout);
       saveConfirmationTimeout = setTimeout(() => {
         saveConfirmation.style.display = 'none';
+      }, 3000);
+    };
+
+    const showApiSaveConfirmation = () => {
+      apiSaveConfirmation.style.display = 'block';
+      clearTimeout(saveConfirmationTimeout);
+      saveConfirmationTimeout = setTimeout(() => {
+        apiSaveConfirmation.style.display = 'none';
       }, 3000);
     };
 
@@ -82,7 +432,7 @@
     // Retrieve information from the Homey API
     Homey.get('serverPort', (err, port) => {
       if (err) return console.error(err);
-      portInput.value = port;
+      portInput.value = port || '3000';
     });
     Homey.get('corsStatus', (err, cors) => {
       if (err) return console.error(err);
@@ -92,15 +442,170 @@
       if (err) return console.error(err);
       corsAcaoInput.value = corsAcao || '*';
     });
-    // Add event listeners
-    saveButton.addEventListener('click', () => {
+    Homey.get('authEnabled', (err, enabled) => {
+      if (err) return console.error(err);
+      authEnabledSelect.value = enabled || 'false';
+    });
+    Homey.get('apiToken', (err, token) => {
+      if (err) return console.error(err);
+      apiTokenInput.value = token || '';
+    });
+    generateTokenButton.addEventListener('click', () => {
+      const bytes = new Uint8Array(32);
+      crypto.getRandomValues(bytes);
+      apiTokenInput.value = Array.from(bytes, (byte) => byte.toString(16).padStart(2, '0')).join('');
+      authEnabledSelect.value = 'true';
+    });
+    toggleTokenButton.addEventListener('click', () => {
+      const isHidden = apiTokenInput.type === 'password';
+      apiTokenInput.type = isHidden ? 'text' : 'password';
+      toggleTokenButton.textContent = isHidden ? 'Hide' : 'Show';
+    });
+    const showPanel = (panel, selectedTab) => {
+      [settingsPanel, countdownPanel, apiPanel, informationPanel, examplesPanel].forEach((currentPanel) => {
+        currentPanel.hidden = currentPanel !== panel;
+      });
+      [settingsTab, countdownTab, apiTab, informationTab, examplesTab].forEach((currentTab) => {
+        const isSelected = currentTab === selectedTab;
+        currentTab.classList.toggle('active', isSelected);
+        currentTab.setAttribute('aria-selected', String(isSelected));
+      });
+    };
+    settingsTab.addEventListener('click', () => showPanel(settingsPanel, settingsTab));
+    countdownTab.addEventListener('click', () => showPanel(countdownPanel, countdownTab));
+    apiTab.addEventListener('click', () => showPanel(apiPanel, apiTab));
+    informationTab.addEventListener('click', () => showPanel(informationPanel, informationTab));
+    examplesTab.addEventListener('click', () => showPanel(examplesPanel, examplesTab));
+    const saveSettings = (showConfirmation) => {
       Promise.all([
         setSetting('serverPort', portInput.value),
         setSetting('corsStatus', corsSelect.value),
         setSetting('corsAcao', corsAcaoInput.value),
+        setSetting('authEnabled', authEnabledSelect.value),
+        ...(apiTokenInput.value.trim() ? [setSetting('apiToken', apiTokenInput.value)] : []),
       ])
-        .then(() => showSaveConfirmation())
+        .then(showConfirmation)
         .catch((err) => Homey.alert(err));
+    };
+    // Add event listeners
+    saveButton.addEventListener('click', () => saveSettings(showSaveConfirmation));
+    apiSaveButton.addEventListener('click', () => saveSettings(showApiSaveConfirmation));
+    const countdownText = (key, fallback) => (
+      typeof Homey.__ === 'function' ? Homey.__(`settings.countdown.${key}`) : fallback
+    );
+    countdownNameInput.placeholder = countdownText('namePlaceholder', 'Timer name');
+    const showCountdownMessage = (message, isError = false) => {
+      countdownMessage.textContent = message;
+      countdownMessage.style.display = 'block';
+      countdownMessage.style.color = isError ? '#b00020' : 'green';
+    };
+    const renderCountdownTimers = () => {
+      countdownTimersList.replaceChildren();
+      countdownNames.forEach((name) => {
+        const item = document.createElement('li');
+        item.className = 'countdown-timer';
+        const label = document.createElement('span');
+        label.textContent = name;
+        const removeButton = document.createElement('button');
+        removeButton.type = 'button';
+        removeButton.className = 'homey-button-secondary';
+        removeButton.textContent = countdownText('remove', 'Remove');
+        removeButton.addEventListener('click', () => {
+          saveCountdownNames(countdownNames.filter((timerName) => timerName !== name));
+        });
+        item.append(label, removeButton);
+        countdownTimersList.append(item);
+      });
+    };
+    const validateCountdownNames = (names) => {
+      if (!Array.isArray(names) || !names.every((name) => typeof name === 'string')) {
+        throw new Error(countdownText('invalidImport', 'The timer list must contain only names.'));
+      }
+      const normalized = names.map((name) => name.trim());
+      if (normalized.some((name) => name.length === 0 || name.length > 80)) {
+        throw new Error(countdownText('invalidName', 'Timer names must contain between 1 and 80 characters.'));
+      }
+      if (new Set(normalized.map((name) => name.toLowerCase())).size !== normalized.length) {
+        throw new Error(countdownText('duplicateName', 'Timer names must be unique.'));
+      }
+      return normalized;
+    };
+    const saveCountdownNames = (names) => {
+      let normalized;
+      try {
+        normalized = validateCountdownNames(names);
+      } catch (error) {
+        showCountdownMessage(error.message, true);
+        return;
+      }
+      setSetting('countdownTimerNames', normalized)
+        .then(() => {
+          countdownNames = normalized;
+          renderCountdownTimers();
+          showCountdownMessage(countdownText('saved', 'Countdown timers saved.'));
+        })
+        .catch((error) => showCountdownMessage(error.message || String(error), true));
+    };
+    countdownAddButton.addEventListener('click', () => {
+      const name = countdownNameInput.value.trim();
+      if (!name) {
+        showCountdownMessage(countdownText('invalidName', 'Enter a timer name.'), true);
+        return;
+      }
+      saveCountdownNames([...countdownNames, name]);
+      countdownNameInput.value = '';
+    });
+    countdownNameInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        countdownAddButton.click();
+      }
+    });
+    countdownExportButton.addEventListener('click', () => {
+      const exportFile = new Blob(
+        [JSON.stringify({ version: 1, timers: countdownNames }, null, 2)],
+        { type: 'application/json' },
+      );
+      const downloadUrl = URL.createObjectURL(exportFile);
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.download = 'homey-toolkit-countdown-timers.json';
+      link.click();
+      URL.revokeObjectURL(downloadUrl);
+    });
+    countdownImportInput.addEventListener('change', () => {
+      const [file] = countdownImportInput.files;
+      if (!file) {
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const imported = JSON.parse(reader.result);
+          const names = Array.isArray(imported) ? imported : imported.timers;
+          saveCountdownNames(validateCountdownNames(names));
+        } catch (error) {
+          showCountdownMessage(error.message || countdownText('invalidImport', 'Invalid timer export file.'), true);
+        } finally {
+          countdownImportInput.value = '';
+        }
+      };
+      reader.onerror = () => {
+        showCountdownMessage(countdownText('importFailed', 'Could not read the timer export file.'), true);
+        countdownImportInput.value = '';
+      };
+      reader.readAsText(file);
+    });
+    Homey.get('countdownTimerNames', (err, names) => {
+      if (err) {
+        showCountdownMessage(err.message || String(err), true);
+        return;
+      }
+      try {
+        countdownNames = validateCountdownNames(names || []);
+        renderCountdownTimers();
+      } catch (error) {
+        showCountdownMessage(error.message, true);
+      }
     });
     displayCorsSettings();
 

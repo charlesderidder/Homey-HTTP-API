@@ -1,0 +1,23 @@
+{
+  "title": {
+    "en": "Resume a countdown timer",
+    "de": "Einen Countdown fortsetzen",
+    "nl": "Hervat een afteltimer"
+  },
+  "titleFormatted": {
+    "en": "Resume timer [[timer]]",
+    "de": "Timer [[timer]] fortsetzen",
+    "nl": "Hervat timer [[timer]]"
+  },
+  "args": [
+    {
+      "type": "autocomplete",
+      "name": "timer",
+      "title": {
+        "en": "Timer",
+        "de": "Timer",
+        "nl": "Timer"
+      }
+    }
+  ]
+}

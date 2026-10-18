@@ -1,0 +1,43 @@
+{
+  "title": {
+    "en": "A countdown timer value changes",
+    "de": "Der Wert eines Countdowns ändert sich",
+    "nl": "De waarde van een afteltimer verandert"
+  },
+  "titleFormatted": {
+    "en": "The value of timer [[timer]] changes",
+    "de": "Der Wert von Timer [[timer]] ändert sich",
+    "nl": "De waarde van timer [[timer]] verandert"
+  },
+  "args": [
+    {
+      "type": "autocomplete",
+      "name": "timer",
+      "title": {
+        "en": "Timer",
+        "de": "Timer",
+        "nl": "Timer"
+      }
+    }
+  ],
+  "tokens": [
+    {
+      "name": "timer",
+      "type": "string",
+      "title": {
+        "en": "Timer",
+        "de": "Timer",
+        "nl": "Timer"
+      }
+    },
+    {
+      "name": "value",
+      "type": "number",
+      "title": {
+        "en": "Value",
+        "de": "Wert",
+        "nl": "Waarde"
+      }
+    }
+  ]
+}
