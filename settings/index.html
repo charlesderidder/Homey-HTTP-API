@@ -505,6 +505,7 @@
     const countdownMessage = document.getElementById('countdown-message');
     const activeCountdownsList = document.getElementById('active-countdowns');
     const activeCountdownsEmpty = document.getElementById('active-countdowns-empty');
+    const settingsPanels = [apiPanel, emailPanel, icalPanel, countdownPanel];
     const icalStatusText = (key, fallback) => (
       typeof Homey.__ === 'function' ? Homey.__(`settings.ical.${key}`) : fallback
     );
@@ -551,6 +552,7 @@
         name.type = 'text';
         name.maxLength = 80;
         name.value = calendar.name;
+        name.disabled = !settingsReady;
         name.setAttribute('aria-label', icalStatusText('namePlaceholder', 'Calendar name'));
         name.addEventListener('input', () => {
           icalCalendars[index].name = name.value;
@@ -559,6 +561,7 @@
         url.className = 'homey-form-input';
         url.type = 'url';
         url.value = calendar.url;
+        url.disabled = !settingsReady;
         url.setAttribute('aria-label', icalStatusText('urlPlaceholder', 'Calendar URL'));
         url.addEventListener('input', () => {
           icalCalendars[index].url = url.value;
@@ -567,6 +570,7 @@
         remove.type = 'button';
         remove.className = 'homey-button-secondary';
         remove.textContent = icalStatusText('remove', 'Remove');
+        remove.disabled = !settingsReady;
         remove.addEventListener('click', () => {
           icalCalendars.splice(index, 1);
           renderICalCalendars();
@@ -581,6 +585,60 @@
     let icalCalendars = [];
     let saveConfirmationTimeout;
     let activeCountdownRefreshPending = false;
+    let settingsReady = false;
+    const pendingSettings = new Set([
+      'serverPort',
+      'corsStatus',
+      'corsAcao',
+      'authEnabled',
+      'apiToken',
+      'gmailAddress',
+      'icalCalendars',
+      'icalSyncInterval',
+      'icalSyncDays',
+      'countdownTimerDurations',
+      'countdownTimerNames',
+    ]);
+    const settingsLoadErrors = [];
+
+    const setSettingsDisabled = (disabled) => {
+      settingsPanels.forEach((panel) => {
+        panel.querySelectorAll('input, select, button').forEach((control) => {
+          control.disabled = disabled;
+        });
+      });
+    };
+    const finishSettingsLoad = (key, error) => {
+      if (error) {
+        settingsLoadErrors.push(error);
+        console.error(`Could not load saved setting "${key}":`, error);
+      }
+      pendingSettings.delete(key);
+      if (pendingSettings.size !== 0) {
+        return;
+      }
+      if (settingsLoadErrors.length > 0) {
+        Homey.alert(Homey.__('settings.loadFailed'));
+        return;
+      }
+      settingsReady = true;
+      setSettingsDisabled(false);
+    };
+    const loadSetting = (key, applyValue) => {
+      Homey.get(key, (err, value) => {
+        if (err) {
+          finishSettingsLoad(key, err);
+          return;
+        }
+        try {
+          applyValue(value);
+          finishSettingsLoad(key);
+        } catch (error) {
+          finishSettingsLoad(key, error);
+        }
+      });
+    };
+    setSettingsDisabled(true);
 
     const showSaveConfirmation = () => {
       saveConfirmation.style.display = 'block';
@@ -600,6 +658,10 @@
 
     // Wrap Homey.set in a Promise so we can wait for all settings to be saved
     const setSetting = (key, value) => new Promise((resolve, reject) => {
+      if (!settingsReady) {
+        reject(new Error('Saved settings are not fully loaded. Reload the settings page before making changes.'));
+        return;
+      }
       Homey.set(key, value, (err) => {
         if (err) return reject(err);
         return resolve();
@@ -617,48 +679,32 @@
       displayCorsSettings();
     });
     // Retrieve information from the Homey API
-    Homey.get('serverPort', (err, port) => {
-      if (err) return console.error(err);
+    loadSetting('serverPort', (port) => {
       portInput.value = port || '3000';
     });
-    Homey.get('corsStatus', (err, cors) => {
-      if (err) return console.error(err);
+    loadSetting('corsStatus', (cors) => {
       corsSelect.value = cors || 'true';
     });
-    Homey.get('corsAcao', (err, corsAcao) => {
-      if (err) return console.error(err);
+    loadSetting('corsAcao', (corsAcao) => {
       corsAcaoInput.value = corsAcao || '*';
     });
-    Homey.get('authEnabled', (err, enabled) => {
-      if (err) return console.error(err);
+    loadSetting('authEnabled', (enabled) => {
       authEnabledSelect.value = enabled || 'false';
     });
-    Homey.get('apiToken', (err, token) => {
-      if (err) return console.error(err);
+    loadSetting('apiToken', (token) => {
       apiTokenInput.value = token || '';
     });
-    Homey.get('gmailAddress', (err, address) => {
-      if (err) return console.error(err);
+    loadSetting('gmailAddress', (address) => {
       gmailAddressInput.value = address || '';
     });
-    Homey.get('icalCalendars', (err, calendars) => {
-      if (err) {
-        showIcalStatus(err.message || String(err), true);
-        return;
-      }
-      try {
-        icalCalendars = validateICalCalendars(calendars || []);
-        renderICalCalendars();
-      } catch (error) {
-        showIcalStatus(error.message || String(error), true);
-      }
+    loadSetting('icalCalendars', (calendars) => {
+      icalCalendars = validateICalCalendars(calendars || []);
+      renderICalCalendars();
     });
-    Homey.get('icalSyncInterval', (err, minutes) => {
-      if (err) return showIcalStatus(err.message || String(err), true);
+    loadSetting('icalSyncInterval', (minutes) => {
       icalSyncIntervalInput.value = minutes || '15';
     });
-    Homey.get('icalSyncDays', (err, days) => {
-      if (err) return showIcalStatus(err.message || String(err), true);
+    loadSetting('icalSyncDays', (days) => {
       icalSyncDaysInput.value = days || '30';
     });
     generateTokenButton.addEventListener('click', () => {
@@ -888,6 +934,7 @@
         durationInput.max = '8640000000000';
         durationInput.step = '1';
         durationInput.value = String(countdownDurations[name] || defaultCountdownSeconds);
+        durationInput.disabled = !settingsReady;
         durationInput.setAttribute('aria-label', `${name} ${durationLabel.textContent}`);
         durationInput.addEventListener('change', () => {
           const seconds = Number(durationInput.value);
@@ -908,6 +955,7 @@
         removeButton.type = 'button';
         removeButton.className = 'homey-button-secondary';
         removeButton.textContent = countdownText('remove', 'Remove');
+        removeButton.disabled = !settingsReady;
         removeButton.addEventListener('click', () => {
           saveCountdownNames(countdownNames.filter((timerName) => timerName !== name));
         });
@@ -981,27 +1029,12 @@
         countdownAddButton.click();
       }
     });
-    Homey.get('countdownTimerDurations', (err, durations) => {
-      if (err) {
-        showCountdownMessage(err.message || String(err), true);
-        return;
-      }
+    loadSetting('countdownTimerDurations', (durations) => {
       if (durations && (typeof durations !== 'object' || Array.isArray(durations))) {
-        showCountdownMessage(countdownText('invalidDuration', 'Countdown timer durations are invalid.'), true);
-        return;
+        throw new Error(countdownText('invalidDuration', 'Countdown timer durations are invalid.'));
       }
-      try {
-        countdownDurations = validateCountdownDurations(durations || {});
-      } catch (error) {
-        showCountdownMessage(error.message, true);
-        return;
-      }
-      try {
-        countdownNames = validateCountdownNames(countdownNames);
-        renderCountdownTimers();
-      } catch (error) {
-        showCountdownMessage(error.message, true);
-      }
+      countdownDurations = validateCountdownDurations(durations || {});
+      renderCountdownTimers();
     });
     refreshActiveCountdowns();
     setInterval(refreshActiveCountdowns, 1000);
@@ -1064,17 +1097,9 @@
       };
       reader.readAsText(file);
     });
-    Homey.get('countdownTimerNames', (err, names) => {
-      if (err) {
-        showCountdownMessage(err.message || String(err), true);
-        return;
-      }
-      try {
-        countdownNames = validateCountdownNames(names || []);
-        renderCountdownTimers();
-      } catch (error) {
-        showCountdownMessage(error.message, true);
-      }
+    loadSetting('countdownTimerNames', (names) => {
+      countdownNames = validateCountdownNames(names || []);
+      renderCountdownTimers();
     });
     displayCorsSettings();
 

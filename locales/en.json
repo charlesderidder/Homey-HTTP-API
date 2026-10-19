@@ -160,6 +160,7 @@
       "tokenNote": "When authentication is enabled, add ?token=abc to the URL or use Authorization: Bearer abc. POST, PUT, and PATCH bodies must contain valid JSON."
     },
     "save": "Save",
-    "saved": "Settings saved successfully"
+    "saved": "Settings saved successfully",
+    "loadFailed": "Saved settings could not all be loaded. Editing and saving are disabled to protect your existing data. Reload the settings page and try again."
   }
 }

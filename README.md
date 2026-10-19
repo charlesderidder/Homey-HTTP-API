@@ -11,6 +11,10 @@ The iCal dashboard widget requires Homey 12.3.0 or later; this release therefore
 - **iCal calendars:** Subscribe to iCalendar (`.ics`) URLs, synchronize upcoming and recurring events automatically or from a Flow, and trigger automations when events start, end, change, or synchronization fails. Flows can check whether an event is ongoing, create Homey-only local events, and remove local events by title.
 - **Countdown timers:** Create named timers and control them from Flows. Start fixed or random countdowns, repeat them for multiple rounds, adjust, pause, resume, or stop them, and use timer events and state as Flow triggers and conditions.
 
+## Settings and app updates
+
+The app keeps its configuration in Homey's persistent app settings, separate from the installed app files. Updating the app in place preserves saved API settings and tokens, Gmail credentials, calendar URLs, timer configuration, and active timer state. Do not uninstall the app as part of an update; uninstalling may remove its stored settings. The Gmail app password is never displayed in the settings page: leaving its field blank keeps the saved password, and it is removed only when you explicitly select **Clear the saved app password**.
+
 ## Supported HTTP methods
 
 The trigger card supports `GET`, `POST`, `PUT`, `PATCH`, `DELETE`, `HEAD`, and `OPTIONS`. Routes may be entered as either `status` or `/status`; query parameters do not change the route match.

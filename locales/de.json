@@ -160,6 +160,7 @@
         "tokenNote": "Wenn die Authentifizierung aktiviert ist, füge ?token=abc zur URL hinzu oder verwende Authorization: Bearer abc. POST-, PUT- und PATCH-Bodies müssen gültiges JSON enthalten."
       },
     "save": "Speichern",
-    "saved": "Einstellungen erfolgreich gespeichert"
+    "saved": "Einstellungen erfolgreich gespeichert",
+    "loadFailed": "Die gespeicherten Einstellungen konnten nicht vollständig geladen werden. Bearbeiten und Speichern sind zum Schutz deiner Daten deaktiviert. Lade die Einstellungsseite neu und versuche es erneut."
   }
 }

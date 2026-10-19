@@ -160,6 +160,7 @@
       "tokenNote": "Als authenticatie is ingeschakeld, voeg ?token=abc toe aan de URL of gebruik Authorization: Bearer abc. POST-, PUT- en PATCH-body's moeten geldige JSON bevatten."
     },
     "save": "Opslaan",
-    "saved": "Instellingen succesvol opgeslagen"
+    "saved": "Instellingen succesvol opgeslagen",
+    "loadFailed": "Niet alle opgeslagen instellingen konden worden geladen. Bewerken en opslaan zijn uitgeschakeld om je gegevens te beschermen. Laad de instellingenpagina opnieuw en probeer het nogmaals."
   }
 }
