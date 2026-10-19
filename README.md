@@ -1,15 +1,15 @@
-# A controlled interface for Homey
+# Homey Toolkit: API, Email, iCal and Timers in one app
 
-This application is not a generic API wrapper. It is a focused integration layer between Homey and the services, scripts, and external systems that need to interact with the home environment without forcing the entire installation into a brittle protocol-driven workflow.
+Homey Toolkit combines the functionality of the **API**, **Email**, **iCal**, and **Timer** apps in one Homey application. Instead of installing and configuring separate apps, you can receive HTTP requests, send Gmail messages, synchronize calendar events, and run countdown-based automations from Homey Flows.
 
-The principle is straightforward: a signal is received, processed, and translated into a clean, structured response. That creates a local communication channel through which devices, services, and automations can exchange information without the rest of the system needing to understand the details of the underlying transport.
+The iCal dashboard widget requires Homey 12.3.0 or later; this release therefore requires Homey 12.3.0 or later.
 
-## What it does
+## Four tools in one app
 
-- expose an internal endpoint for a trigger
-- receive an incoming request and route it to a Homey flow
-- return a JSON response as a structured result
-- operate locally without exposing the home environment as a public-facing internet service
+- **HTTP API:** Receive local HTTP requests and use them to trigger Homey Flows. Flows can return an empty `200` response or a custom JSON response. Optional token authentication helps protect endpoints.
+- **Gmail email:** Configure a Gmail account and send plain-text emails from a Flow. Email actions can be combined with API requests, timer events, and other Homey automation.
+- **iCal calendars:** Subscribe to iCalendar (`.ics`) URLs, synchronize upcoming and recurring events automatically or from a Flow, and trigger automations when events start, end, change, or synchronization fails. Flows can check whether an event is ongoing, create Homey-only local events, and remove local events by title.
+- **Countdown timers:** Create named timers and control them from Flows. Start fixed or random countdowns, repeat them for multiple rounds, adjust, pause, resume, or stop them, and use timer events and state as Flow triggers and conditions.
 
 ## Supported HTTP methods
 
@@ -33,6 +33,16 @@ http://HOMEY_IP:3000/alles?veld=Zonsopkomst&token=YOUR_TOKEN
 
 The response contains only that value in its `data` property. A requested field that does not exist returns `404`.
 
+## iCal calendars
+
+Open the **iCal** settings tab, add a name and an iCalendar (`.ics`) URL for each calendar, and choose the automatic synchronization interval and how many days ahead to load events. Synchronization runs automatically (every 15 minutes by default) and can also be started from the settings page or the **Synchronize iCal calendars** Flow action. Recurring events are expanded into individual events for the selected timeframe. Calendar URLs may contain private access tokens; treat them as credentials.
+
+For Google Calendar, copy **Secret address in iCal format** from the calendar's settings. For Outlook, publish the calendar and copy the ICS link. For iCloud, enable **Public Calendar** and copy the original URL; Apple's default Home and Work calendars do not provide public links. Calendar providers that only specify `X-WR-TIMEZONE` without timezone information on events may have their event times interpreted as UTC.
+
+The iCal Flow cards trigger when an event starts or ends, when a synchronized event changes or is added, and when a calendar synchronization fails. Conditions check whether any event or a title/calendar match is ongoing, or whether an event starts within a given number of minutes. Flows can create local events, which exist only in Homey and do not modify the external calendar, and delete local events whose title contains specified text. Trigger cards provide the event title, description, location, calendar, start/end time, duration, URL, status, and UID.
+
+Pair the **iCal Calendar** device to expose whether any synchronized event is upcoming. The **Upcoming calendar events** dashboard widget displays events over the selected number of days, with optional calendar names and locations, and provides a manual refresh button.
+
 ## Countdown timers
 
 Create named timers in the **Timers** tab in app settings. The list can be imported from or exported to a JSON file. Timers keep running across app restarts; the app stores the deadline and resumes a paused timer with its remaining value.
@@ -44,6 +54,12 @@ The countdown flow cards provide:
 - Conditions for running state, paused state, exact value (or not), and less-than or greater-than comparisons.
 
 Values are measured in whole seconds. The zero trigger includes the completed round number and the number of rounds remaining. A stopped timer is reset to `-1`; a timer that completes its final round remains at `0` until it is started or stopped.
+
+## Gmail email
+
+Configure a Gmail address and a Google app password in the **Email** settings tab. A Google app password requires 2-Step Verification; do not enter your regular Google account password. The password is stored in the app's Homey settings.
+
+Use the **Send an email with Gmail** Flow action to send a plain-text message. It can be connected after the HTTP API trigger to send email when a matching request is received. Keep API token authentication enabled for routes that can send email.
 
 ## Why it matters
 

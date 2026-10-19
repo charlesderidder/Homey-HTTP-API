@@ -1,0 +1,19 @@
+{
+  "title": {
+    "en": "A new iCal event is synchronized",
+    "de": "Ein neues iCal-Ereignis wird synchronisiert",
+    "nl": "Een nieuwe iCal-afspraak wordt gesynchroniseerd"
+  },
+  "tokens": [
+    { "name": "title", "type": "string", "title": { "en": "Title", "de": "Titel", "nl": "Titel" } },
+    { "name": "description", "type": "string", "title": { "en": "Description", "de": "Beschreibung", "nl": "Beschrijving" } },
+    { "name": "location", "type": "string", "title": { "en": "Location", "de": "Ort", "nl": "Locatie" } },
+    { "name": "calendar", "type": "string", "title": { "en": "Calendar", "de": "Kalender", "nl": "Agenda" } },
+    { "name": "start", "type": "string", "title": { "en": "Start", "de": "Beginn", "nl": "Start" } },
+    { "name": "end", "type": "string", "title": { "en": "End", "de": "Ende", "nl": "Einde" } },
+    { "name": "duration", "type": "number", "title": { "en": "Duration (minutes)", "de": "Dauer (Minuten)", "nl": "Duur (minuten)" } },
+    { "name": "url", "type": "string", "title": { "en": "Event URL", "de": "Ereignis-URL", "nl": "Afspraak-URL" } },
+    { "name": "status", "type": "string", "title": { "en": "Status", "de": "Status", "nl": "Status" } },
+    { "name": "uid", "type": "string", "title": { "en": "UID", "de": "UID", "nl": "UID" } }
+  ]
+}

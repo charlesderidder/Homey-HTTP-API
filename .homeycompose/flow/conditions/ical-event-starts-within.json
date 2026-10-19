@@ -1,0 +1,16 @@
+{
+  "title": {
+    "en": "An iCal event starts within",
+    "de": "Ein iCal-Ereignis beginnt innerhalb von",
+    "nl": "Een iCal-afspraak begint binnen"
+  },
+  "titleFormatted": {
+    "en": "An event in [[calendar]] starts within [[minutes]] minutes",
+    "de": "Ein Ereignis in [[calendar]] beginnt innerhalb von [[minutes]] Minuten",
+    "nl": "Een afspraak in [[calendar]] begint binnen [[minutes]] minuten"
+  },
+  "args": [
+    { "type": "number", "name": "minutes", "title": { "en": "Minutes", "de": "Minuten", "nl": "Minuten" } },
+    { "type": "text", "name": "calendar", "placeholder": { "en": "Calendar name (optional)", "de": "Kalendername (optional)", "nl": "Agendanaam (optioneel)" } }
+  ]
+}

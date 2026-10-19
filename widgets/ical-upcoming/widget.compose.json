@@ -1,0 +1,50 @@
+{
+  "name": {
+    "en": "Upcoming calendar events",
+    "de": "Bevorstehende Kalenderereignisse",
+    "nl": "Aankomende agenda-afspraken"
+  },
+  "height": 400,
+  "settings": [
+    {
+      "id": "daysAhead",
+      "type": "number",
+      "title": {
+        "en": "Days ahead",
+        "de": "Tage im Voraus",
+        "nl": "Dagen vooruit"
+      },
+      "value": 3
+    },
+    {
+      "id": "showCalendar",
+      "type": "checkbox",
+      "title": {
+        "en": "Show calendar name",
+        "de": "Kalendername anzeigen",
+        "nl": "Agendanaam tonen"
+      },
+      "value": true
+    },
+    {
+      "id": "showLocation",
+      "type": "checkbox",
+      "title": {
+        "en": "Show location",
+        "de": "Ort anzeigen",
+        "nl": "Locatie tonen"
+      },
+      "value": false
+    }
+  ],
+  "api": {
+    "getUpcomingEvents": {
+      "method": "GET",
+      "path": "/events"
+    },
+    "syncCalendars": {
+      "method": "POST",
+      "path": "/sync"
+    }
+  }
+}

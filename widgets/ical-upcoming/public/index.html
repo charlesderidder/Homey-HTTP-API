@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Upcoming calendar events</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      font-family: system-ui, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 12px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    h1 {
+      font-size: 1rem;
+      margin: 0;
+    }
+
+    button {
+      border: 0;
+      border-radius: 6px;
+      cursor: pointer;
+      padding: 6px 10px;
+    }
+
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    li {
+      border-left: 3px solid #0052cc;
+      margin: 8px 0;
+      padding: 2px 0 2px 10px;
+    }
+
+    .event-title {
+      font-weight: 600;
+    }
+
+    .event-meta,
+    #status {
+      font-size: 0.85rem;
+      opacity: 0.75;
+    }
+  </style>
+  <script src="/homey.js" data-origin="widget"></script>
+</head>
+<body>
+  <header>
+    <h1 id="heading">Upcoming events</h1>
+    <button id="refresh" type="button" aria-label="Refresh calendar events">↻</button>
+  </header>
+  <p id="status" role="status" aria-live="polite">Loading…</p>
+  <ul id="events"></ul>
+  <script>
+    function onHomeyReady(Homey) {
+      const list = document.getElementById('events');
+      const status = document.getElementById('status');
+      const refresh = document.getElementById('refresh');
+      const settings = Homey.getSettings();
+      const labels = {
+        heading: Homey.__('settings.ical.widgetTitle'),
+        empty: Homey.__('settings.ical.widgetEmpty'),
+        failed: Homey.__('settings.ical.widgetFailed'),
+        loading: Homey.__('settings.ical.widgetLoading'),
+      };
+      document.getElementById('heading').textContent = labels.heading;
+
+      const renderEvents = (error, events) => {
+        list.replaceChildren();
+        if (error) {
+          status.textContent = `${labels.failed} ${error.message || error}`;
+          return;
+        }
+        if (!Array.isArray(events) || events.length === 0) {
+          status.textContent = labels.empty;
+          return;
+        }
+        status.textContent = '';
+        events.forEach((event) => {
+          const item = document.createElement('li');
+          const title = document.createElement('div');
+          title.className = 'event-title';
+          title.textContent = event.title;
+          const time = document.createElement('div');
+          time.className = 'event-meta';
+          time.textContent = `${new Date(event.start).toLocaleString()} - ${new Date(event.end).toLocaleTimeString()}`;
+          item.append(title, time);
+          if (settings.showCalendar !== false && event.calendar) {
+            const calendar = document.createElement('div');
+            calendar.className = 'event-meta';
+            calendar.textContent = event.calendar;
+            item.appendChild(calendar);
+          }
+          if (settings.showLocation === true && event.location) {
+            const location = document.createElement('div');
+            location.className = 'event-meta';
+            location.textContent = event.location;
+            item.appendChild(location);
+          }
+          list.appendChild(item);
+        });
+      };
+
+      const loadEvents = () => {
+        status.textContent = labels.loading;
+        const daysAhead = Number(settings.daysAhead || 3);
+        Homey.api('GET', `/events?daysAhead=${encodeURIComponent(daysAhead)}`, {}, renderEvents);
+      };
+
+      refresh.addEventListener('click', () => {
+        refresh.disabled = true;
+        Homey.api('POST', '/sync', {}, (error) => {
+          refresh.disabled = false;
+          if (error) {
+            renderEvents(error);
+            return;
+          }
+          loadEvents();
+        });
+      });
+
+      loadEvents();
+      setInterval(loadEvents, 5 * 60 * 1000);
+      Homey.ready();
+    }
+  </script>
+</body>
+</html>

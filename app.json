@@ -1,8 +1,8 @@
 {
   "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
   "id": "dev.charlesderidder.homeyhttpapi",
-  "version": "1.5.0",
-  "compatibility": ">=8.1.1",
+  "version": "1.6.0",
+  "compatibility": ">=12.3.0",
   "sdk": 3,
   "platforms": [
     "local"
@@ -13,14 +13,24 @@
     "nl": "Homey Toolkit"
   },
   "description": {
-    "en": "A local HTTP API and configurable countdown timers for Homey flows",
-    "de": "Eine lokale HTTP-API und konfigurierbare Countdowns für Homey-Flows",
-    "nl": "Een lokale HTTP-API en instelbare afteltimers voor Homey-flows"
+    "en": "A local HTTP API, countdown timers, Gmail email, and iCal calendar events for Homey flows",
+    "de": "Eine lokale HTTP-API, Countdown-Timer, Gmail-E-Mail und iCal-Kalenderereignisse für Homey-Flows",
+    "nl": "Een lokale HTTP-API, afteltimers, Gmail-e-mail en iCal-agenda-afspraken voor Homey-flows"
   },
   "category": [
     "internet"
   ],
   "permissions": [],
+  "api": {
+    "testEmail": {
+      "method": "POST",
+      "path": "/test-email"
+    },
+    "syncCalendars": {
+      "method": "POST",
+      "path": "/sync-calendars"
+    }
+  },
   "images": {
     "small": "/assets/images/small.png",
     "large": "/assets/images/large.png",
@@ -349,6 +359,434 @@
           }
         ],
         "id": "countdown-value-changed"
+      },
+      {
+        "title": {
+          "en": "A new iCal event is synchronized",
+          "de": "Ein neues iCal-Ereignis wird synchronisiert",
+          "nl": "Een nieuwe iCal-afspraak wordt gesynchroniseerd"
+        },
+        "tokens": [
+          {
+            "name": "title",
+            "type": "string",
+            "title": {
+              "en": "Title",
+              "de": "Titel",
+              "nl": "Titel"
+            }
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "title": {
+              "en": "Description",
+              "de": "Beschreibung",
+              "nl": "Beschrijving"
+            }
+          },
+          {
+            "name": "location",
+            "type": "string",
+            "title": {
+              "en": "Location",
+              "de": "Ort",
+              "nl": "Locatie"
+            }
+          },
+          {
+            "name": "calendar",
+            "type": "string",
+            "title": {
+              "en": "Calendar",
+              "de": "Kalender",
+              "nl": "Agenda"
+            }
+          },
+          {
+            "name": "start",
+            "type": "string",
+            "title": {
+              "en": "Start",
+              "de": "Beginn",
+              "nl": "Start"
+            }
+          },
+          {
+            "name": "end",
+            "type": "string",
+            "title": {
+              "en": "End",
+              "de": "Ende",
+              "nl": "Einde"
+            }
+          },
+          {
+            "name": "duration",
+            "type": "number",
+            "title": {
+              "en": "Duration (minutes)",
+              "de": "Dauer (Minuten)",
+              "nl": "Duur (minuten)"
+            }
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "title": {
+              "en": "Event URL",
+              "de": "Ereignis-URL",
+              "nl": "Afspraak-URL"
+            }
+          },
+          {
+            "name": "status",
+            "type": "string",
+            "title": {
+              "en": "Status",
+              "de": "Status",
+              "nl": "Status"
+            }
+          },
+          {
+            "name": "uid",
+            "type": "string",
+            "title": {
+              "en": "UID",
+              "de": "UID",
+              "nl": "UID"
+            }
+          }
+        ],
+        "id": "ical-event-added"
+      },
+      {
+        "title": {
+          "en": "A synchronized iCal event changes",
+          "de": "Ein synchronisiertes iCal-Ereignis wird geändert",
+          "nl": "Een gesynchroniseerde iCal-afspraak wijzigt"
+        },
+        "tokens": [
+          {
+            "name": "title",
+            "type": "string",
+            "title": {
+              "en": "Title",
+              "de": "Titel",
+              "nl": "Titel"
+            }
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "title": {
+              "en": "Description",
+              "de": "Beschreibung",
+              "nl": "Beschrijving"
+            }
+          },
+          {
+            "name": "location",
+            "type": "string",
+            "title": {
+              "en": "Location",
+              "de": "Ort",
+              "nl": "Locatie"
+            }
+          },
+          {
+            "name": "calendar",
+            "type": "string",
+            "title": {
+              "en": "Calendar",
+              "de": "Kalender",
+              "nl": "Agenda"
+            }
+          },
+          {
+            "name": "start",
+            "type": "string",
+            "title": {
+              "en": "Start",
+              "de": "Beginn",
+              "nl": "Start"
+            }
+          },
+          {
+            "name": "end",
+            "type": "string",
+            "title": {
+              "en": "End",
+              "de": "Ende",
+              "nl": "Einde"
+            }
+          },
+          {
+            "name": "duration",
+            "type": "number",
+            "title": {
+              "en": "Duration (minutes)",
+              "de": "Dauer (Minuten)",
+              "nl": "Duur (minuten)"
+            }
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "title": {
+              "en": "Event URL",
+              "de": "Ereignis-URL",
+              "nl": "Afspraak-URL"
+            }
+          },
+          {
+            "name": "status",
+            "type": "string",
+            "title": {
+              "en": "Status",
+              "de": "Status",
+              "nl": "Status"
+            }
+          },
+          {
+            "name": "uid",
+            "type": "string",
+            "title": {
+              "en": "UID",
+              "de": "UID",
+              "nl": "UID"
+            }
+          }
+        ],
+        "id": "ical-event-changed"
+      },
+      {
+        "title": {
+          "en": "An iCal event ends",
+          "de": "Ein iCal-Ereignis endet",
+          "nl": "Een iCal-afspraak eindigt"
+        },
+        "tokens": [
+          {
+            "name": "title",
+            "type": "string",
+            "title": {
+              "en": "Title",
+              "de": "Titel",
+              "nl": "Titel"
+            }
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "title": {
+              "en": "Description",
+              "de": "Beschreibung",
+              "nl": "Beschrijving"
+            }
+          },
+          {
+            "name": "location",
+            "type": "string",
+            "title": {
+              "en": "Location",
+              "de": "Ort",
+              "nl": "Locatie"
+            }
+          },
+          {
+            "name": "calendar",
+            "type": "string",
+            "title": {
+              "en": "Calendar",
+              "de": "Kalender",
+              "nl": "Agenda"
+            }
+          },
+          {
+            "name": "start",
+            "type": "string",
+            "title": {
+              "en": "Start",
+              "de": "Beginn",
+              "nl": "Start"
+            }
+          },
+          {
+            "name": "end",
+            "type": "string",
+            "title": {
+              "en": "End",
+              "de": "Ende",
+              "nl": "Einde"
+            }
+          },
+          {
+            "name": "duration",
+            "type": "number",
+            "title": {
+              "en": "Duration (minutes)",
+              "de": "Dauer (Minuten)",
+              "nl": "Duur (minuten)"
+            }
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "title": {
+              "en": "Event URL",
+              "de": "Ereignis-URL",
+              "nl": "Afspraak-URL"
+            }
+          },
+          {
+            "name": "status",
+            "type": "string",
+            "title": {
+              "en": "Status",
+              "de": "Status",
+              "nl": "Status"
+            }
+          },
+          {
+            "name": "uid",
+            "type": "string",
+            "title": {
+              "en": "UID",
+              "de": "UID",
+              "nl": "UID"
+            }
+          }
+        ],
+        "id": "ical-event-ended"
+      },
+      {
+        "title": {
+          "en": "An iCal event starts",
+          "de": "Ein iCal-Ereignis beginnt",
+          "nl": "Een iCal-afspraak begint"
+        },
+        "tokens": [
+          {
+            "name": "title",
+            "type": "string",
+            "title": {
+              "en": "Title",
+              "de": "Titel",
+              "nl": "Titel"
+            }
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "title": {
+              "en": "Description",
+              "de": "Beschreibung",
+              "nl": "Beschrijving"
+            }
+          },
+          {
+            "name": "location",
+            "type": "string",
+            "title": {
+              "en": "Location",
+              "de": "Ort",
+              "nl": "Locatie"
+            }
+          },
+          {
+            "name": "calendar",
+            "type": "string",
+            "title": {
+              "en": "Calendar",
+              "de": "Kalender",
+              "nl": "Agenda"
+            }
+          },
+          {
+            "name": "start",
+            "type": "string",
+            "title": {
+              "en": "Start",
+              "de": "Beginn",
+              "nl": "Start"
+            }
+          },
+          {
+            "name": "end",
+            "type": "string",
+            "title": {
+              "en": "End",
+              "de": "Ende",
+              "nl": "Einde"
+            }
+          },
+          {
+            "name": "duration",
+            "type": "number",
+            "title": {
+              "en": "Duration (minutes)",
+              "de": "Dauer (Minuten)",
+              "nl": "Duur (minuten)"
+            }
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "title": {
+              "en": "Event URL",
+              "de": "Ereignis-URL",
+              "nl": "Afspraak-URL"
+            }
+          },
+          {
+            "name": "status",
+            "type": "string",
+            "title": {
+              "en": "Status",
+              "de": "Status",
+              "nl": "Status"
+            }
+          },
+          {
+            "name": "uid",
+            "type": "string",
+            "title": {
+              "en": "UID",
+              "de": "UID",
+              "nl": "UID"
+            }
+          }
+        ],
+        "id": "ical-event-started"
+      },
+      {
+        "title": {
+          "en": "iCal synchronization fails",
+          "de": "Die iCal-Synchronisierung schlägt fehl",
+          "nl": "iCal-synchronisatie mislukt"
+        },
+        "tokens": [
+          {
+            "name": "calendar",
+            "type": "string",
+            "title": {
+              "en": "Calendar",
+              "de": "Kalender",
+              "nl": "Agenda"
+            }
+          },
+          {
+            "name": "error",
+            "type": "string",
+            "title": {
+              "en": "Error",
+              "de": "Fehler",
+              "nl": "Foutmelding"
+            }
+          }
+        ],
+        "id": "ical-sync-error"
       },
       {
         "title": {
@@ -688,6 +1126,80 @@
           }
         ],
         "id": "countdown-value-comparison"
+      },
+      {
+        "title": {
+          "en": "Any iCal event is ongoing",
+          "de": "Ein iCal-Ereignis findet gerade statt",
+          "nl": "Er is een iCal-afspraak bezig"
+        },
+        "id": "ical-any-event-is-ongoing"
+      },
+      {
+        "title": {
+          "en": "An iCal event matching the title is ongoing",
+          "de": "Ein iCal-Ereignis mit passendem Titel findet statt",
+          "nl": "Een iCal-afspraak met deze titel is bezig"
+        },
+        "titleFormatted": {
+          "en": "An event with title containing [[title]] in [[calendar]] is ongoing",
+          "de": "Ein Ereignis mit dem Titel [[title]] in [[calendar]] findet statt",
+          "nl": "Een afspraak met titel [[title]] in [[calendar]] is bezig"
+        },
+        "args": [
+          {
+            "type": "text",
+            "name": "title",
+            "placeholder": {
+              "en": "Title contains (optional)",
+              "de": "Titel enthält (optional)",
+              "nl": "Titel bevat (optioneel)"
+            }
+          },
+          {
+            "type": "text",
+            "name": "calendar",
+            "placeholder": {
+              "en": "Calendar name (optional)",
+              "de": "Kalendername (optional)",
+              "nl": "Agendanaam (optioneel)"
+            }
+          }
+        ],
+        "id": "ical-event-is-ongoing"
+      },
+      {
+        "title": {
+          "en": "An iCal event starts within",
+          "de": "Ein iCal-Ereignis beginnt innerhalb von",
+          "nl": "Een iCal-afspraak begint binnen"
+        },
+        "titleFormatted": {
+          "en": "An event in [[calendar]] starts within [[minutes]] minutes",
+          "de": "Ein Ereignis in [[calendar]] beginnt innerhalb von [[minutes]] Minuten",
+          "nl": "Een afspraak in [[calendar]] begint binnen [[minutes]] minuten"
+        },
+        "args": [
+          {
+            "type": "number",
+            "name": "minutes",
+            "title": {
+              "en": "Minutes",
+              "de": "Minuten",
+              "nl": "Minuten"
+            }
+          },
+          {
+            "type": "text",
+            "name": "calendar",
+            "placeholder": {
+              "en": "Calendar name (optional)",
+              "de": "Kalendername (optional)",
+              "nl": "Agendanaam (optioneel)"
+            }
+          }
+        ],
+        "id": "ical-event-starts-within"
       }
     ],
     "actions": [
@@ -747,6 +1259,54 @@
           }
         ],
         "id": "countdown-pause"
+      },
+      {
+        "title": {
+          "en": "Start or reset a countdown timer",
+          "de": "Einen Countdown starten oder zurücksetzen",
+          "nl": "Start of reset een afteltimer"
+        },
+        "titleFormatted": {
+          "en": "Start or reset timer [[timer]] using its configured duration",
+          "de": "Timer [[timer]] mit der eingestellten Dauer starten oder zurücksetzen",
+          "nl": "Start of reset timer [[timer]] met de ingestelde duur"
+        },
+        "args": [
+          {
+            "type": "autocomplete",
+            "name": "timer",
+            "title": {
+              "en": "Timer",
+              "de": "Timer",
+              "nl": "Timer"
+            }
+          }
+        ],
+        "id": "countdown-reset"
+      },
+      {
+        "title": {
+          "en": "Reset a countdown timer if running",
+          "de": "Countdown-Timer zurücksetzen, wenn er läuft",
+          "nl": "Reset een afteltimer als deze loopt"
+        },
+        "titleFormatted": {
+          "en": "Reset timer [[timer]] to its configured duration if it is running",
+          "de": "Timer [[timer]] auf die eingestellte Dauer zurücksetzen, wenn er läuft",
+          "nl": "Reset timer [[timer]] naar de ingestelde duur als deze loopt"
+        },
+        "args": [
+          {
+            "type": "autocomplete",
+            "name": "timer",
+            "title": {
+              "en": "Timer",
+              "de": "Timer",
+              "nl": "Timer"
+            }
+          }
+        ],
+        "id": "countdown-reset-if-running"
       },
       {
         "title": {
@@ -899,6 +1459,169 @@
       },
       {
         "title": {
+          "en": "Send an email with Gmail",
+          "de": "E-Mail mit Gmail senden",
+          "nl": "E-mail versturen met Gmail"
+        },
+        "titleFormatted": {
+          "en": "Send an email to [[to]] with subject [[subject]] and message [[body]]",
+          "de": "E-Mail an [[to]] mit Betreff [[subject]] und Nachricht [[body]] senden",
+          "nl": "Verstuur een e-mail naar [[to]] met onderwerp [[subject]] en bericht [[body]]"
+        },
+        "hint": {
+          "en": "Send a plain-text email using the Gmail account configured in app settings.",
+          "de": "Sendet eine Nur-Text-E-Mail über das in den App-Einstellungen konfigurierte Gmail-Konto.",
+          "nl": "Verstuurt een e-mail als platte tekst via het Gmail-account dat is ingesteld bij de app-instellingen."
+        },
+        "args": [
+          {
+            "type": "text",
+            "name": "to",
+            "placeholder": {
+              "en": "Recipient email address",
+              "de": "E-Mail-Adresse des Empfängers",
+              "nl": "E-mailadres van de ontvanger"
+            }
+          },
+          {
+            "type": "text",
+            "name": "subject",
+            "placeholder": {
+              "en": "Subject",
+              "de": "Betreff",
+              "nl": "Onderwerp"
+            }
+          },
+          {
+            "type": "text",
+            "name": "body",
+            "placeholder": {
+              "en": "Email message",
+              "de": "E-Mail-Nachricht",
+              "nl": "Bericht"
+            }
+          }
+        ],
+        "id": "gmail-send-email"
+      },
+      {
+        "title": {
+          "en": "Create a local calendar event",
+          "de": "Ein lokales Kalenderereignis erstellen",
+          "nl": "Een lokale agenda-afspraak maken"
+        },
+        "titleFormatted": {
+          "en": "Create [[title]] in [[calendar]] from [[start]] to [[end]]: [[description]] at [[location]]",
+          "de": "[[title]] in [[calendar]] von [[start]] bis [[end]] erstellen: [[description]] bei [[location]]",
+          "nl": "Maak [[title]] in [[calendar]] van [[start]] tot [[end]]: [[description]] op [[location]]"
+        },
+        "hint": {
+          "en": "Creates an event stored only in Homey; it is not added to the external calendar.",
+          "de": "Erstellt ein Ereignis nur in Homey; es wird nicht zum externen Kalender hinzugefügt.",
+          "nl": "Maakt een afspraak die alleen in Homey wordt opgeslagen en niet aan de externe agenda wordt toegevoegd."
+        },
+        "args": [
+          {
+            "type": "text",
+            "name": "calendar",
+            "placeholder": {
+              "en": "Calendar name",
+              "de": "Kalendername",
+              "nl": "Agendanaam"
+            }
+          },
+          {
+            "type": "text",
+            "name": "title",
+            "placeholder": {
+              "en": "Event title",
+              "de": "Ereignistitel",
+              "nl": "Titel van afspraak"
+            }
+          },
+          {
+            "type": "text",
+            "name": "start",
+            "placeholder": {
+              "en": "Start date/time (ISO 8601)",
+              "de": "Startdatum/-zeit (ISO 8601)",
+              "nl": "Startdatum/-tijd (ISO 8601)"
+            }
+          },
+          {
+            "type": "text",
+            "name": "end",
+            "placeholder": {
+              "en": "End date/time (ISO 8601)",
+              "de": "Enddatum/-zeit (ISO 8601)",
+              "nl": "Einddatum/-tijd (ISO 8601)"
+            }
+          },
+          {
+            "type": "text",
+            "name": "description",
+            "placeholder": {
+              "en": "Description",
+              "de": "Beschreibung",
+              "nl": "Beschrijving"
+            }
+          },
+          {
+            "type": "text",
+            "name": "location",
+            "placeholder": {
+              "en": "Location",
+              "de": "Ort",
+              "nl": "Locatie"
+            }
+          }
+        ],
+        "id": "ical-create-local-event"
+      },
+      {
+        "title": {
+          "en": "Delete local calendar events by title",
+          "de": "Lokale Kalenderereignisse nach Titel löschen",
+          "nl": "Lokale agenda-afspraken verwijderen op titel"
+        },
+        "titleFormatted": {
+          "en": "Delete local events whose title contains [[title]]",
+          "de": "Lokale Ereignisse löschen, deren Titel [[title]] enthält",
+          "nl": "Verwijder lokale afspraken met [[title]] in de titel"
+        },
+        "hint": {
+          "en": "Deletes all local events whose title contains the given text.",
+          "de": "Löscht alle lokalen Ereignisse, deren Titel den angegebenen Text enthält.",
+          "nl": "Verwijdert alle lokale afspraken waarvan de titel de opgegeven tekst bevat."
+        },
+        "args": [
+          {
+            "type": "text",
+            "name": "title",
+            "placeholder": {
+              "en": "Part of event title",
+              "de": "Teil des Ereignistitels",
+              "nl": "Deel van de titel"
+            }
+          }
+        ],
+        "id": "ical-delete-local-event-by-title"
+      },
+      {
+        "title": {
+          "en": "Synchronize iCal calendars",
+          "de": "iCal-Kalender synchronisieren",
+          "nl": "iCal-agenda's synchroniseren"
+        },
+        "hint": {
+          "en": "Download and update events from the configured calendar URLs.",
+          "de": "Lädt Ereignisse von den konfigurierten Kalender-URLs herunter und aktualisiert sie.",
+          "nl": "Downloadt en actualiseert afspraken van de ingestelde agenda-URL's."
+        },
+        "id": "ical-sync-calendars"
+      },
+      {
+        "title": {
           "en": "Respond with 200",
           "de": "Mit Status code 200 antworten",
           "nl": "Reageer met 200"
@@ -940,5 +1663,86 @@
         "id": "local-api-response-with"
       }
     ]
+  },
+  "drivers": [
+    {
+      "name": {
+        "en": "iCal Calendar",
+        "de": "iCal-Kalender",
+        "nl": "iCal-agenda"
+      },
+      "class": "sensor",
+      "capabilities": [
+        "alarm_generic"
+      ],
+      "capabilitiesOptions": {
+        "alarm_generic": {
+          "title": {
+            "en": "Upcoming events",
+            "de": "Bevorstehende Ereignisse",
+            "nl": "Aankomende afspraken"
+          }
+        }
+      },
+      "images": {
+        "small": "/assets/images/small.png",
+        "large": "/assets/images/large.png",
+        "xlarge": "/assets/images/xlarge.png"
+      },
+      "id": "icalcalendar"
+    }
+  ],
+  "widgets": {
+    "ical-upcoming": {
+      "name": {
+        "en": "Upcoming calendar events",
+        "de": "Bevorstehende Kalenderereignisse",
+        "nl": "Aankomende agenda-afspraken"
+      },
+      "height": 400,
+      "settings": [
+        {
+          "id": "daysAhead",
+          "type": "number",
+          "title": {
+            "en": "Days ahead",
+            "de": "Tage im Voraus",
+            "nl": "Dagen vooruit"
+          },
+          "value": 3
+        },
+        {
+          "id": "showCalendar",
+          "type": "checkbox",
+          "title": {
+            "en": "Show calendar name",
+            "de": "Kalendername anzeigen",
+            "nl": "Agendanaam tonen"
+          },
+          "value": true
+        },
+        {
+          "id": "showLocation",
+          "type": "checkbox",
+          "title": {
+            "en": "Show location",
+            "de": "Ort anzeigen",
+            "nl": "Locatie tonen"
+          },
+          "value": false
+        }
+      ],
+      "api": {
+        "getUpcomingEvents": {
+          "method": "GET",
+          "path": "/events"
+        },
+        "syncCalendars": {
+          "method": "POST",
+          "path": "/sync"
+        }
+      },
+      "id": "ical-upcoming"
+    }
   }
 }

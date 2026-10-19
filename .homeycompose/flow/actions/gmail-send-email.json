@@ -1,0 +1,46 @@
+{
+  "title": {
+    "en": "Send an email with Gmail",
+    "de": "E-Mail mit Gmail senden",
+    "nl": "E-mail versturen met Gmail"
+  },
+  "titleFormatted": {
+    "en": "Send an email to [[to]] with subject [[subject]] and message [[body]]",
+    "de": "E-Mail an [[to]] mit Betreff [[subject]] und Nachricht [[body]] senden",
+    "nl": "Verstuur een e-mail naar [[to]] met onderwerp [[subject]] en bericht [[body]]"
+  },
+  "hint": {
+    "en": "Send a plain-text email using the Gmail account configured in app settings.",
+    "de": "Sendet eine Nur-Text-E-Mail über das in den App-Einstellungen konfigurierte Gmail-Konto.",
+    "nl": "Verstuurt een e-mail als platte tekst via het Gmail-account dat is ingesteld bij de app-instellingen."
+  },
+  "args": [
+    {
+      "type": "text",
+      "name": "to",
+      "placeholder": {
+        "en": "Recipient email address",
+        "de": "E-Mail-Adresse des Empfängers",
+        "nl": "E-mailadres van de ontvanger"
+      }
+    },
+    {
+      "type": "text",
+      "name": "subject",
+      "placeholder": {
+        "en": "Subject",
+        "de": "Betreff",
+        "nl": "Onderwerp"
+      }
+    },
+    {
+      "type": "text",
+      "name": "body",
+      "placeholder": {
+        "en": "Email message",
+        "de": "E-Mail-Nachricht",
+        "nl": "Bericht"
+      }
+    }
+  ]
+}

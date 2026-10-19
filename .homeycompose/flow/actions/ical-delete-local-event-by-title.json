@@ -1,0 +1,20 @@
+{
+  "title": {
+    "en": "Delete local calendar events by title",
+    "de": "Lokale Kalenderereignisse nach Titel löschen",
+    "nl": "Lokale agenda-afspraken verwijderen op titel"
+  },
+  "titleFormatted": {
+    "en": "Delete local events whose title contains [[title]]",
+    "de": "Lokale Ereignisse löschen, deren Titel [[title]] enthält",
+    "nl": "Verwijder lokale afspraken met [[title]] in de titel"
+  },
+  "hint": {
+    "en": "Deletes all local events whose title contains the given text.",
+    "de": "Löscht alle lokalen Ereignisse, deren Titel den angegebenen Text enthält.",
+    "nl": "Verwijdert alle lokale afspraken waarvan de titel de opgegeven tekst bevat."
+  },
+  "args": [
+    { "type": "text", "name": "title", "placeholder": { "en": "Part of event title", "de": "Teil des Ereignistitels", "nl": "Deel van de titel" } }
+  ]
+}

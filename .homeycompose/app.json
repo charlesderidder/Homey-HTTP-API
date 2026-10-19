@@ -1,7 +1,7 @@
 {
   "id": "dev.charlesderidder.homeyhttpapi",
-  "version": "1.5.0",
-  "compatibility": ">=8.1.1",
+  "version": "1.6.0",
+  "compatibility": ">=12.3.0",
   "sdk": 3,
   "platforms": [
     "local"
@@ -12,14 +12,24 @@
     "nl": "Homey Toolkit"
   },
   "description": {
-    "en": "A local HTTP API and configurable countdown timers for Homey flows",
-    "de": "Eine lokale HTTP-API und konfigurierbare Countdowns für Homey-Flows",
-    "nl": "Een lokale HTTP-API en instelbare afteltimers voor Homey-flows"
+    "en": "A local HTTP API, countdown timers, Gmail email, and iCal calendar events for Homey flows",
+    "de": "Eine lokale HTTP-API, Countdown-Timer, Gmail-E-Mail und iCal-Kalenderereignisse für Homey-Flows",
+    "nl": "Een lokale HTTP-API, afteltimers, Gmail-e-mail en iCal-agenda-afspraken voor Homey-flows"
   },
   "category": [
     "internet"
   ],
   "permissions": [],
+  "api": {
+    "testEmail": {
+      "method": "POST",
+      "path": "/test-email"
+    },
+    "syncCalendars": {
+      "method": "POST",
+      "path": "/sync-calendars"
+    }
+  },
   "images": {
     "small": "/assets/images/small.png",
     "large": "/assets/images/large.png",

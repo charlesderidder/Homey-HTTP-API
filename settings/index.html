@@ -81,6 +81,10 @@
       column-gap: 16px;
     }
 
+    .homey-form-group.port-form-group {
+      grid-template-columns: minmax(100px, 34%) minmax(100px, 220px);
+    }
+
     .homey-form-label {
       margin-bottom: 0;
     }
@@ -110,6 +114,20 @@
       list-style: none;
     }
 
+    .active-countdowns {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .active-countdown {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 8px 0;
+      border-bottom: 1px solid #e5e5e5;
+    }
+
     .countdown-timer {
       display: flex;
       align-items: center;
@@ -117,6 +135,24 @@
       gap: 12px;
       padding: 8px 0;
       border-bottom: 1px solid #e5e5e5;
+    }
+
+    .countdown-duration {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .countdown-duration .homey-form-input {
+      width: 110px;
+    }
+
+    .ical-calendar-fields {
+      display: grid;
+      flex: 1;
+      grid-template-columns: minmax(120px, 0.4fr) minmax(200px, 1fr);
+      gap: 8px;
+      min-width: 0;
     }
 
     .countdown-controls {
@@ -155,6 +191,10 @@
       .countdown-timer {
         align-items: flex-start;
       }
+
+      .ical-calendar-fields {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
   <script
@@ -174,42 +214,20 @@
 </header>
 
 <div class="settings-tabs" role="tablist">
-  <button type="button" class="settings-tab active" id="settings-tab" role="tab" aria-selected="true" data-i18n="settings.tabs.settings">Instellingen</button>
+  <button type="button" class="settings-tab active" id="api-tab" role="tab" aria-selected="true" data-i18n="settings.tabs.api">API</button>
+  <button type="button" class="settings-tab" id="email-tab" role="tab" aria-selected="false" data-i18n="settings.tabs.email">Email</button>
+  <button type="button" class="settings-tab" id="ical-tab" role="tab" aria-selected="false" data-i18n="settings.tabs.ical">iCal</button>
   <button type="button" class="settings-tab" id="countdown-tab" role="tab" aria-selected="false" data-i18n="settings.tabs.countdown">Timers</button>
-  <button type="button" class="settings-tab" id="api-tab" role="tab" aria-selected="false" data-i18n="settings.tabs.api">API</button>
   <button type="button" class="settings-tab" id="information-tab" role="tab" aria-selected="false" data-i18n="settings.tabs.information">Informatie</button>
-  <button type="button" class="settings-tab" id="examples-tab" role="tab" aria-selected="false" data-i18n="settings.tabs.examples">Voorbeelden</button>
 </div>
-
-<section class="settings-panel" id="settings-panel" role="tabpanel">
-<fieldset class="homey-form-fieldset">
-  <legend class="homey-form-legend" data-i18n="settings.serverSettings">Server Settings</legend>
-  
-  <div class="homey-form-group">
-    <label class="homey-form-label" for="server-port" data-i18n="settings.port.label">Port</label>
-    <input class="homey-form-input" id="server-port" type="number" value="3000" />
-  </div>
-  <div class="homey-form-group">
-    <label class="homey-form-label" for="cors-enabled" data-i18n="settings.cors.label">CORS (default: enabled)</label>
-    <select class="homey-form-select" name="cors-enabled" id="cors-enabled">
-      <option value="true" data-i18n="settings.cors.enabled">Enabled</option>
-      <option value="false" data-i18n="settings.cors.disabled">Disabled</option>
-    </select>
-  </div>
-  <div class="homey-form-group" id="additional-cors-settings" style="display: none;">
-    <label class="homey-form-label" for="cors-acao" data-i18n="settings.corsAccessControlAllowOrigin.label">Access-Control-Allow-Origin (default: *)</label>
-    <input class="homey-form-input" id="cors-acao" type="text" value="*" />
-  </div>
-</fieldset>
-
-<button id="save" class="homey-button-primary-full" data-i18n="settings.save">Save</button>
-<p id="save-confirmation" data-i18n="settings.saved" style="display: none; color: green; margin-top: 8px;"></p>
-</section>
 
 <section class="settings-panel" id="countdown-panel" role="tabpanel" hidden>
   <div class="information-content">
     <h2 data-i18n="settings.countdown.title">Countdown timers</h2>
     <p data-i18n="settings.countdown.intro">Create timers here, then select them in the countdown flow cards.</p>
+    <h3 data-i18n="settings.countdown.activeTitle">Active timers</h3>
+    <ul id="active-countdowns" class="active-countdowns" aria-live="polite"></ul>
+    <p id="active-countdowns-empty" data-i18n="settings.countdown.activeEmpty">No active countdown timers.</p>
     <ul id="countdown-timers" class="countdown-timers"></ul>
     <div class="countdown-controls">
       <input class="homey-form-input" id="countdown-name" type="text" maxlength="80" data-i18n-placeholder="settings.countdown.namePlaceholder" placeholder="Timer name" />
@@ -224,22 +242,91 @@
   </div>
 </section>
 
-<section class="settings-panel" id="api-panel" role="tabpanel" hidden>
+<section class="settings-panel" id="email-panel" role="tabpanel" hidden>
   <div class="information-content">
-    <h2 data-i18n="settings.api.title">API gebruiken</h2>
-    <p data-i18n="settings.api.intro">Gebruik de triggerkaart in Advanced Flow om een route en HTTP-methode te registreren.</p>
-    <h3 data-i18n="settings.api.routeTitle">Voorbeeld van een route</h3>
-    <p><code>/informatie</code></p>
-    <p data-i18n="settings.api.routeText">De slash aan het begin is optioneel. informatie en /informatie verwijzen naar dezelfde route.</p>
-    <h3 data-i18n="settings.api.methodsTitle">HTTP-methoden</h3>
-    <p><code>GET</code>, <code>POST</code>, <code>PUT</code>, <code>PATCH</code>, <code>DELETE</code>, <code>HEAD</code> en <code>OPTIONS</code></p>
-    <p data-i18n="settings.api.methodsText">Gebruik POST, PUT en PATCH voor JSON-data. Gebruik GET om data op te vragen en DELETE om een actie of resource te verwijderen.</p>
-    <h3 data-i18n="settings.api.responseTitle">Antwoord vanuit Flow</h3>
-    <p data-i18n="settings.api.responseText">Gebruik de actiekaart Reageer met... om een JSON-antwoord terug te sturen, of Reageer met 200 voor een eenvoudige bevestiging.</p>
-    <h3 data-i18n="settings.api.fieldTitle">Een enkele waarde opvragen</h3>
-    <p data-i18n="settings.api.fieldText">Voeg ?veld= toe aan een GET-request om een enkele eigenschap uit het Flow-antwoord op te vragen. field= is ook mogelijk. De eigenschap mag rechtstreeks in het antwoord of binnen data staan.</p>
-    <pre>GET /alles?veld=Zonsopkomst</pre>
+    <h2 data-i18n="settings.email.title">Email settings</h2>
+    <p data-i18n="settings.email.intro">Configure Gmail to send email from a Homey Flow.</p>
+    <p data-i18n="settings.email.instructions">Use a Google app password, not your regular Google account password. App passwords require 2-Step Verification.</p>
+    <p><a href="https://support.google.com/accounts/answer/185833" target="_blank" rel="noreferrer" data-i18n="settings.email.appPasswordLink">Google app password instructions</a></p>
+    <p data-i18n="settings.email.flowInstructions">After saving these settings, use the “Send an email with Gmail” action card in a Flow. Connect it to an HTTP API trigger to send an email when a request is received.</p>
+    <p data-i18n="settings.email.securityNote">The app password is stored in Homey settings. Keep API token authentication enabled if email sending can be triggered through the HTTP API.</p>
   </div>
+  <fieldset class="homey-form-fieldset">
+    <legend class="homey-form-legend" data-i18n="settings.email.accountTitle">Gmail account</legend>
+    <div class="homey-form-group">
+      <label class="homey-form-label" for="gmail-address" data-i18n="settings.email.addressLabel">Gmail address</label>
+      <input class="homey-form-input" id="gmail-address" type="email" autocomplete="username" />
+    </div>
+    <div class="homey-form-group">
+      <label class="homey-form-label" for="gmail-app-password" data-i18n="settings.email.appPasswordLabel">Google app password</label>
+      <div>
+        <input class="homey-form-input" id="gmail-app-password" type="password" autocomplete="new-password" />
+        <small data-i18n="settings.email.appPasswordHint">Leave blank to keep the saved password.</small>
+      </div>
+    </div>
+    <div class="homey-form-group">
+      <span></span>
+      <label><input id="clear-gmail-app-password" type="checkbox" /> <span data-i18n="settings.email.clearAppPassword">Clear the saved app password</span></label>
+    </div>
+  </fieldset>
+  <button id="email-save" class="homey-button-primary-full" data-i18n="settings.save">Save</button>
+  <p id="email-save-confirmation" data-i18n="settings.email.saved" style="display: none; color: green; margin-top: 8px;"></p>
+  <button type="button" id="email-test" class="homey-button-secondary-full" data-i18n="settings.email.test">Test email</button>
+  <p id="email-test-status" role="status" aria-live="polite" style="display: none; margin-top: 8px;"></p>
+</section>
+
+<section class="settings-panel" id="ical-panel" role="tabpanel" hidden>
+  <div class="information-content">
+    <h2 data-i18n="settings.ical.title">iCal calendars</h2>
+    <p data-i18n="settings.ical.intro">Add calendar URLs to synchronize events and use them in Homey Flows.</p>
+    <p data-i18n="settings.ical.privacy">Calendar URLs may contain private access tokens. Store them securely and do not share them.</p>
+    <p data-i18n="settings.ical.googleHelp">Google Calendar: copy the Secret address in iCal format from the calendar settings.</p>
+    <p><a href="https://calendar.google.com/" target="_blank" rel="noreferrer" data-i18n="settings.ical.googleLink">Open Google Calendar</a></p>
+    <p data-i18n="settings.ical.outlookHelp">Outlook: publish the calendar and copy its ICS link.</p>
+    <p><a href="https://outlook.office.com/calendar/" target="_blank" rel="noreferrer" data-i18n="settings.ical.outlookLink">Open Outlook Calendar</a></p>
+    <p data-i18n="settings.ical.icloudHelp">iCloud: enable Public Calendar and use the original link. Apple's default Home and Work calendars do not provide public links.</p>
+    <p><a href="https://www.icloud.com/calendar/" target="_blank" rel="noreferrer" data-i18n="settings.ical.icloudLink">Open iCloud Calendar</a></p>
+    <h3 data-i18n="settings.ical.calendarsTitle">Calendars</h3>
+    <ul id="ical-calendars" class="countdown-timers"></ul>
+    <div class="countdown-controls">
+      <input class="homey-form-input" id="ical-name" type="text" maxlength="80" data-i18n-placeholder="settings.ical.namePlaceholder" placeholder="Calendar name" />
+      <input class="homey-form-input" id="ical-url" type="url" data-i18n-placeholder="settings.ical.urlPlaceholder" placeholder="https://example.com/calendar.ics" />
+      <button type="button" id="ical-add" class="homey-button-secondary" data-i18n="settings.ical.add">Add calendar</button>
+    </div>
+    <div class="homey-form-group">
+      <label class="homey-form-label" for="ical-sync-interval" data-i18n="settings.ical.syncIntervalLabel">Sync interval (minutes)</label>
+      <input class="homey-form-input" id="ical-sync-interval" type="number" min="5" max="1440" value="15" />
+    </div>
+    <div class="homey-form-group">
+      <label class="homey-form-label" for="ical-sync-days" data-i18n="settings.ical.syncDaysLabel">Events to sync ahead (days)</label>
+      <input class="homey-form-input" id="ical-sync-days" type="number" min="1" max="365" value="30" />
+    </div>
+    <button id="ical-save" class="homey-button-primary-full" data-i18n="settings.save">Save</button>
+    <p id="ical-save-status" role="status" aria-live="polite" style="display: none; margin-top: 8px;"></p>
+    <button type="button" id="ical-sync" class="homey-button-secondary-full" data-i18n="settings.ical.syncNow">Synchronize now</button>
+    <p data-i18n="settings.ical.flowInfo">Use the iCal Flow cards to sync calendars, create local events, and trigger automations when events start or end.</p>
+  </div>
+</section>
+
+<section class="settings-panel" id="api-panel" role="tabpanel">
+  <fieldset class="homey-form-fieldset">
+    <legend class="homey-form-legend" data-i18n="settings.serverSettings">Server Settings</legend>
+    <div class="homey-form-group port-form-group">
+      <label class="homey-form-label" for="server-port" data-i18n="settings.port.label">Port</label>
+      <input class="homey-form-input" id="server-port" type="number" value="3000" />
+    </div>
+    <div class="homey-form-group">
+      <label class="homey-form-label" for="cors-enabled" data-i18n="settings.cors.label">CORS (default: enabled)</label>
+      <select class="homey-form-select" name="cors-enabled" id="cors-enabled">
+        <option value="true" data-i18n="settings.cors.enabled">Enabled</option>
+        <option value="false" data-i18n="settings.cors.disabled">Disabled</option>
+      </select>
+    </div>
+    <div class="homey-form-group" id="additional-cors-settings" style="display: none;">
+      <label class="homey-form-label" for="cors-acao" data-i18n="settings.corsAccessControlAllowOrigin.label">Access-Control-Allow-Origin (default: *)</label>
+      <input class="homey-form-input" id="cors-acao" type="text" value="*" />
+    </div>
+  </fieldset>
   <fieldset class="homey-form-fieldset">
     <legend class="homey-form-legend" data-i18n="settings.authentication.title">API authentication</legend>
     <div class="homey-form-group">
@@ -259,8 +346,23 @@
       </div>
     </div>
   </fieldset>
-  <button id="api-save" class="homey-button-primary-full" data-i18n="settings.save">Save</button>
-  <p id="api-save-confirmation" data-i18n="settings.saved" style="display: none; color: green; margin-top: 8px;"></p>
+  <button id="save" class="homey-button-primary-full" data-i18n="settings.save">Save</button>
+  <p id="save-confirmation" data-i18n="settings.saved" style="display: none; color: green; margin-top: 8px;"></p>
+  <div class="information-content">
+    <h2 data-i18n="settings.api.title">API gebruiken</h2>
+    <p data-i18n="settings.api.intro">Gebruik de triggerkaart in Advanced Flow om een route en HTTP-methode te registreren.</p>
+    <h3 data-i18n="settings.api.routeTitle">Voorbeeld van een route</h3>
+    <p><code>/informatie</code></p>
+    <p data-i18n="settings.api.routeText">De slash aan het begin is optioneel. informatie en /informatie verwijzen naar dezelfde route.</p>
+    <h3 data-i18n="settings.api.methodsTitle">HTTP-methoden</h3>
+    <p><code>GET</code>, <code>POST</code>, <code>PUT</code>, <code>PATCH</code>, <code>DELETE</code>, <code>HEAD</code> en <code>OPTIONS</code></p>
+    <p data-i18n="settings.api.methodsText">Gebruik POST, PUT en PATCH voor JSON-data. Gebruik GET om data op te vragen en DELETE om een actie of resource te verwijderen.</p>
+    <h3 data-i18n="settings.api.responseTitle">Antwoord vanuit Flow</h3>
+    <p data-i18n="settings.api.responseText">Gebruik de actiekaart Reageer met... om een JSON-antwoord terug te sturen, of Reageer met 200 voor een eenvoudige bevestiging.</p>
+    <h3 data-i18n="settings.api.fieldTitle">Een enkele waarde opvragen</h3>
+    <p data-i18n="settings.api.fieldText">Voeg ?veld= toe aan een GET-request om een enkele eigenschap uit het Flow-antwoord op te vragen. field= is ook mogelijk. De eigenschap mag rechtstreeks in het antwoord of binnen data staan.</p>
+    <pre>GET /alles?veld=Zonsopkomst</pre>
+  </div>
 </section>
 
 <section class="settings-panel" id="information-panel" role="tabpanel" hidden>
@@ -276,12 +378,7 @@
     <p data-i18n="settings.information.tokenText">Enable token authentication and generate a token. The recommended format is the Authorization header. For simple URL clients, add the token as shown below.</p>
     <p><code>/informatie?token=abc</code></p>
     <p data-i18n="settings.information.headerText">The token is checked before a Homey flow starts. Generating a new token invalidates the old token. Do not share the token or expose the API port directly to the public internet.</p>
-  </div>
-</section>
-
-<section class="settings-panel" id="examples-panel" role="tabpanel" hidden>
-  <div class="information-content">
-    <h2 data-i18n="settings.examples.title">Request examples</h2>
+    <h3 data-i18n="settings.information.examplesTitle">Examples</h3>
     <p data-i18n="settings.examples.intro">Register the route and method in an Advanced Flow trigger, then use one of these requests from a client or HomeyScript.</p>
     <div class="request-example">
       <h3>GET</h3>
@@ -367,33 +464,123 @@
     const portInput = document.getElementById('server-port');
     const corsSelect = document.getElementById('cors-enabled');
     const saveButton = document.getElementById('save');
-    const apiSaveButton = document.getElementById('api-save');
+    const emailSaveButton = document.getElementById('email-save');
+    const emailTestButton = document.getElementById('email-test');
+    const emailTestStatus = document.getElementById('email-test-status');
+    const gmailAddressInput = document.getElementById('gmail-address');
+    const gmailAppPasswordInput = document.getElementById('gmail-app-password');
+    const clearGmailAppPasswordCheckbox = document.getElementById('clear-gmail-app-password');
     const additionalCorsSettings = document.getElementById('additional-cors-settings');
     const corsAcaoInput = document.getElementById('cors-acao');
     const saveConfirmation = document.getElementById('save-confirmation');
-    const apiSaveConfirmation = document.getElementById('api-save-confirmation');
+    const emailSaveConfirmation = document.getElementById('email-save-confirmation');
     const authEnabledSelect = document.getElementById('auth-enabled');
     const apiTokenInput = document.getElementById('api-token');
     const toggleTokenButton = document.getElementById('toggle-token');
     const generateTokenButton = document.getElementById('generate-token');
-    const settingsTab = document.getElementById('settings-tab');
     const countdownTab = document.getElementById('countdown-tab');
+    const emailTab = document.getElementById('email-tab');
+    const icalTab = document.getElementById('ical-tab');
     const apiTab = document.getElementById('api-tab');
     const informationTab = document.getElementById('information-tab');
-    const examplesTab = document.getElementById('examples-tab');
-    const settingsPanel = document.getElementById('settings-panel');
     const countdownPanel = document.getElementById('countdown-panel');
+    const emailPanel = document.getElementById('email-panel');
+    const icalPanel = document.getElementById('ical-panel');
     const apiPanel = document.getElementById('api-panel');
     const informationPanel = document.getElementById('information-panel');
-    const examplesPanel = document.getElementById('examples-panel');
+    const icalCalendarsList = document.getElementById('ical-calendars');
+    const icalNameInput = document.getElementById('ical-name');
+    const icalUrlInput = document.getElementById('ical-url');
+    const icalAddButton = document.getElementById('ical-add');
+    const icalSyncIntervalInput = document.getElementById('ical-sync-interval');
+    const icalSyncDaysInput = document.getElementById('ical-sync-days');
+    const icalSaveButton = document.getElementById('ical-save');
+    const icalSyncButton = document.getElementById('ical-sync');
+    const icalSaveStatus = document.getElementById('ical-save-status');
     const countdownNameInput = document.getElementById('countdown-name');
     const countdownTimersList = document.getElementById('countdown-timers');
     const countdownAddButton = document.getElementById('countdown-add');
     const countdownExportButton = document.getElementById('countdown-export');
     const countdownImportInput = document.getElementById('countdown-import');
     const countdownMessage = document.getElementById('countdown-message');
+    const activeCountdownsList = document.getElementById('active-countdowns');
+    const activeCountdownsEmpty = document.getElementById('active-countdowns-empty');
+    const icalStatusText = (key, fallback) => (
+      typeof Homey.__ === 'function' ? Homey.__(`settings.ical.${key}`) : fallback
+    );
+    const showIcalStatus = (message, isError = false) => {
+      icalSaveStatus.style.display = 'block';
+      icalSaveStatus.style.color = isError ? 'red' : 'green';
+      icalSaveStatus.textContent = message;
+    };
+    const validateICalCalendars = (calendars) => {
+      if (!Array.isArray(calendars)) {
+        throw new Error(icalStatusText('invalidCalendars', 'Calendar list is invalid.'));
+      }
+      const normalized = calendars.map((calendar) => {
+        if (!calendar || typeof calendar.name !== 'string' || typeof calendar.url !== 'string') {
+          throw new Error(icalStatusText('invalidCalendars', 'Calendar list is invalid.'));
+        }
+        const name = calendar.name.trim();
+        const url = calendar.url.trim();
+        let parsedUrl;
+        try {
+          parsedUrl = new URL(url);
+        } catch (error) {
+          throw new Error(icalStatusText('invalidUrl', 'Enter a valid calendar URL.'));
+        }
+        if (!name || name.length > 80 || !['http:', 'https:'].includes(parsedUrl.protocol)) {
+          throw new Error(icalStatusText('invalidCalendar', 'Calendar name or URL is invalid.'));
+        }
+        return { name, url };
+      });
+      if (new Set(normalized.map((calendar) => calendar.name.toLowerCase())).size !== normalized.length) {
+        throw new Error(icalStatusText('duplicateName', 'Calendar names must be unique.'));
+      }
+      return normalized;
+    };
+    const renderICalCalendars = () => {
+      icalCalendarsList.replaceChildren();
+      icalCalendars.forEach((calendar, index) => {
+        const item = document.createElement('li');
+        item.className = 'countdown-timer';
+        const fields = document.createElement('div');
+        fields.className = 'ical-calendar-fields';
+        const name = document.createElement('input');
+        name.className = 'homey-form-input';
+        name.type = 'text';
+        name.maxLength = 80;
+        name.value = calendar.name;
+        name.setAttribute('aria-label', icalStatusText('namePlaceholder', 'Calendar name'));
+        name.addEventListener('input', () => {
+          icalCalendars[index].name = name.value;
+        });
+        const url = document.createElement('input');
+        url.className = 'homey-form-input';
+        url.type = 'url';
+        url.value = calendar.url;
+        url.setAttribute('aria-label', icalStatusText('urlPlaceholder', 'Calendar URL'));
+        url.addEventListener('input', () => {
+          icalCalendars[index].url = url.value;
+        });
+        const remove = document.createElement('button');
+        remove.type = 'button';
+        remove.className = 'homey-button-secondary';
+        remove.textContent = icalStatusText('remove', 'Remove');
+        remove.addEventListener('click', () => {
+          icalCalendars.splice(index, 1);
+          renderICalCalendars();
+        });
+        fields.append(name, url);
+        item.append(fields, remove);
+        icalCalendarsList.appendChild(item);
+      });
+    };
     let countdownNames = [];
+    let countdownDurations = {};
+    let icalCalendars = [];
     let saveConfirmationTimeout;
+    let activeCountdownRefreshPending = false;
 
     const showSaveConfirmation = () => {
       saveConfirmation.style.display = 'block';
@@ -403,11 +590,11 @@
       }, 3000);
     };
 
-    const showApiSaveConfirmation = () => {
-      apiSaveConfirmation.style.display = 'block';
+    const showEmailSaveConfirmation = () => {
+      emailSaveConfirmation.style.display = 'block';
       clearTimeout(saveConfirmationTimeout);
       saveConfirmationTimeout = setTimeout(() => {
-        apiSaveConfirmation.style.display = 'none';
+        emailSaveConfirmation.style.display = 'none';
       }, 3000);
     };
 
@@ -450,6 +637,30 @@
       if (err) return console.error(err);
       apiTokenInput.value = token || '';
     });
+    Homey.get('gmailAddress', (err, address) => {
+      if (err) return console.error(err);
+      gmailAddressInput.value = address || '';
+    });
+    Homey.get('icalCalendars', (err, calendars) => {
+      if (err) {
+        showIcalStatus(err.message || String(err), true);
+        return;
+      }
+      try {
+        icalCalendars = validateICalCalendars(calendars || []);
+        renderICalCalendars();
+      } catch (error) {
+        showIcalStatus(error.message || String(error), true);
+      }
+    });
+    Homey.get('icalSyncInterval', (err, minutes) => {
+      if (err) return showIcalStatus(err.message || String(err), true);
+      icalSyncIntervalInput.value = minutes || '15';
+    });
+    Homey.get('icalSyncDays', (err, days) => {
+      if (err) return showIcalStatus(err.message || String(err), true);
+      icalSyncDaysInput.value = days || '30';
+    });
     generateTokenButton.addEventListener('click', () => {
       const bytes = new Uint8Array(32);
       crypto.getRandomValues(bytes);
@@ -462,20 +673,20 @@
       toggleTokenButton.textContent = isHidden ? 'Hide' : 'Show';
     });
     const showPanel = (panel, selectedTab) => {
-      [settingsPanel, countdownPanel, apiPanel, informationPanel, examplesPanel].forEach((currentPanel) => {
+      [apiPanel, emailPanel, icalPanel, countdownPanel, informationPanel].forEach((currentPanel) => {
         currentPanel.hidden = currentPanel !== panel;
       });
-      [settingsTab, countdownTab, apiTab, informationTab, examplesTab].forEach((currentTab) => {
+      [apiTab, emailTab, icalTab, countdownTab, informationTab].forEach((currentTab) => {
         const isSelected = currentTab === selectedTab;
         currentTab.classList.toggle('active', isSelected);
         currentTab.setAttribute('aria-selected', String(isSelected));
       });
     };
-    settingsTab.addEventListener('click', () => showPanel(settingsPanel, settingsTab));
     countdownTab.addEventListener('click', () => showPanel(countdownPanel, countdownTab));
+    emailTab.addEventListener('click', () => showPanel(emailPanel, emailTab));
+    icalTab.addEventListener('click', () => showPanel(icalPanel, icalTab));
     apiTab.addEventListener('click', () => showPanel(apiPanel, apiTab));
     informationTab.addEventListener('click', () => showPanel(informationPanel, informationTab));
-    examplesTab.addEventListener('click', () => showPanel(examplesPanel, examplesTab));
     const saveSettings = (showConfirmation) => {
       Promise.all([
         setSetting('serverPort', portInput.value),
@@ -489,10 +700,168 @@
     };
     // Add event listeners
     saveButton.addEventListener('click', () => saveSettings(showSaveConfirmation));
-    apiSaveButton.addEventListener('click', () => saveSettings(showApiSaveConfirmation));
+    emailSaveButton.addEventListener('click', () => {
+      const gmailAddress = gmailAddressInput.value.trim();
+      if (!gmailAddress) {
+        Homey.alert(Homey.__('settings.email.addressRequired'));
+        return;
+      }
+
+      const password = gmailAppPasswordInput.value.trim();
+      const updates = [setSetting('gmailAddress', gmailAddress)];
+      if (password) {
+        updates.push(setSetting('gmailAppPassword', password));
+      } else if (clearGmailAppPasswordCheckbox.checked) {
+        updates.push(setSetting('gmailAppPassword', ''));
+      }
+      Promise.all(updates)
+        .then(() => {
+          gmailAppPasswordInput.value = '';
+          clearGmailAppPasswordCheckbox.checked = false;
+          showEmailSaveConfirmation();
+        })
+        .catch((err) => Homey.alert(err));
+    });
+    emailTestButton.addEventListener('click', () => {
+      emailTestButton.disabled = true;
+      emailTestStatus.style.display = 'block';
+      emailTestStatus.style.color = '';
+      emailTestStatus.textContent = Homey.__('settings.email.testSending');
+      Homey.api('POST', '/test-email', {}, (err) => {
+        emailTestButton.disabled = false;
+        if (err) {
+          emailTestStatus.style.color = 'red';
+          emailTestStatus.textContent = `${Homey.__('settings.email.testFailed')} ${err.message || err}`;
+          return;
+        }
+        emailTestStatus.style.color = 'green';
+        emailTestStatus.textContent = Homey.__('settings.email.testSuccess');
+      });
+    });
+    icalAddButton.addEventListener('click', () => {
+      try {
+        icalCalendars = validateICalCalendars([
+          ...icalCalendars,
+          { name: icalNameInput.value, url: icalUrlInput.value },
+        ]);
+        icalNameInput.value = '';
+        icalUrlInput.value = '';
+        renderICalCalendars();
+        icalSaveStatus.style.display = 'none';
+      } catch (error) {
+        showIcalStatus(error.message || String(error), true);
+      }
+    });
+    icalSaveButton.addEventListener('click', () => {
+      let calendars;
+      const interval = Number(icalSyncIntervalInput.value);
+      const days = Number(icalSyncDaysInput.value);
+      try {
+        calendars = validateICalCalendars(icalCalendars);
+        if (!Number.isSafeInteger(interval) || interval < 5 || interval > 1440) {
+          throw new Error(icalStatusText('invalidInterval', 'Sync interval must be between 5 and 1,440 minutes.'));
+        }
+        if (!Number.isSafeInteger(days) || days < 1 || days > 365) {
+          throw new Error(icalStatusText('invalidDays', 'Sync timeframe must be between 1 and 365 days.'));
+        }
+      } catch (error) {
+        showIcalStatus(error.message || String(error), true);
+        return;
+      }
+      Promise.all([
+        setSetting('icalCalendars', calendars),
+        setSetting('icalSyncInterval', interval),
+        setSetting('icalSyncDays', days),
+      ])
+        .then(() => {
+          icalCalendars = calendars;
+          showIcalStatus(icalStatusText('saved', 'iCal settings saved.'));
+        })
+        .catch((error) => showIcalStatus(error.message || String(error), true));
+    });
+    icalSyncButton.addEventListener('click', () => {
+      icalSyncButton.disabled = true;
+      showIcalStatus(icalStatusText('syncing', 'Synchronizing calendars...'));
+      Homey.api('POST', '/sync-calendars', {}, (err, result) => {
+        icalSyncButton.disabled = false;
+        if (err) {
+          showIcalStatus(`${icalStatusText('syncFailed', 'Calendar synchronization failed:')} ${err.message || err}`, true);
+          return;
+        }
+        const count = result && Number.isInteger(result.events) ? result.events : 0;
+        const failed = result && Array.isArray(result.failedCalendars) ? result.failedCalendars : [];
+        if (failed.length > 0) {
+          showIcalStatus(
+            `${icalStatusText('syncPartial', 'Calendar synchronization finished with errors. Events:')} ${count}. ${failed.join(', ')}`,
+            true,
+          );
+          return;
+        }
+        showIcalStatus(`${icalStatusText('syncSuccess', 'Calendar synchronization complete. Events:')} ${count}`);
+      });
+    });
     const countdownText = (key, fallback) => (
       typeof Homey.__ === 'function' ? Homey.__(`settings.countdown.${key}`) : fallback
     );
+    const renderActiveCountdowns = (states) => {
+      if (!Array.isArray(states)) {
+        throw new Error(countdownText('activeLoadFailed', 'Could not load active countdown timers.'));
+      }
+      const now = Date.now();
+      const activeTimers = states.filter((timer) => (
+        timer
+        && typeof timer.name === 'string'
+        && typeof timer.expiresAt === 'number'
+        && Number.isFinite(timer.expiresAt)
+        && timer.paused === false
+        && timer.expiresAt > now
+      ));
+      activeCountdownsList.replaceChildren();
+      activeTimers.forEach((timer) => {
+        const item = document.createElement('li');
+        item.className = 'active-countdown';
+        const name = document.createElement('span');
+        name.textContent = timer.name;
+        const remaining = document.createElement('span');
+        remaining.textContent = countdownText('remaining', 'Remaining: {seconds} seconds')
+          .replace('{seconds}', String(Math.ceil((timer.expiresAt - now) / 1000)));
+        item.append(name, remaining);
+        activeCountdownsList.append(item);
+      });
+      activeCountdownsEmpty.hidden = activeTimers.length > 0;
+    };
+    const refreshActiveCountdowns = () => {
+      if (activeCountdownRefreshPending) {
+        return;
+      }
+      activeCountdownRefreshPending = true;
+      Homey.get('countdownTimerStates', (err, states) => {
+        activeCountdownRefreshPending = false;
+        if (err) {
+          activeCountdownsList.replaceChildren();
+          activeCountdownsEmpty.hidden = false;
+          activeCountdownsEmpty.textContent = countdownText(
+            'activeLoadFailed',
+            'Could not load active countdown timers.',
+          );
+          console.error(err);
+          return;
+        }
+        try {
+          renderActiveCountdowns(states || []);
+          activeCountdownsEmpty.textContent = countdownText(
+            'activeEmpty',
+            'No active countdown timers.',
+          );
+        } catch (error) {
+          activeCountdownsList.replaceChildren();
+          activeCountdownsEmpty.hidden = false;
+          activeCountdownsEmpty.textContent = error.message || String(error);
+          console.error(error);
+        }
+      });
+    };
+    const defaultCountdownSeconds = 600;
     countdownNameInput.placeholder = countdownText('namePlaceholder', 'Timer name');
     const showCountdownMessage = (message, isError = false) => {
       countdownMessage.textContent = message;
@@ -501,11 +870,40 @@
     };
     const renderCountdownTimers = () => {
       countdownTimersList.replaceChildren();
-      countdownNames.forEach((name) => {
+      countdownNames.forEach((name, index) => {
         const item = document.createElement('li');
         item.className = 'countdown-timer';
         const label = document.createElement('span');
         label.textContent = name;
+        const durationField = document.createElement('div');
+        durationField.className = 'countdown-duration';
+        const durationLabel = document.createElement('label');
+        durationLabel.htmlFor = `countdown-duration-${index}`;
+        durationLabel.textContent = countdownText('duration', 'Seconds');
+        const durationInput = document.createElement('input');
+        durationInput.id = `countdown-duration-${index}`;
+        durationInput.className = 'homey-form-input';
+        durationInput.type = 'number';
+        durationInput.min = '1';
+        durationInput.max = '8640000000000';
+        durationInput.step = '1';
+        durationInput.value = String(countdownDurations[name] || defaultCountdownSeconds);
+        durationInput.setAttribute('aria-label', `${name} ${durationLabel.textContent}`);
+        durationInput.addEventListener('change', () => {
+          const seconds = Number(durationInput.value);
+          if (!Number.isSafeInteger(seconds) || seconds < 1 || seconds > 8640000000000) {
+            durationInput.value = String(countdownDurations[name] || defaultCountdownSeconds);
+            showCountdownMessage(countdownText('invalidDuration', 'Duration must be a positive whole number of seconds.'), true);
+            return;
+          }
+          const updatedDurations = { ...countdownDurations, [name]: seconds };
+          setSetting('countdownTimerDurations', updatedDurations)
+            .then(() => {
+              countdownDurations = updatedDurations;
+              showCountdownMessage(countdownText('saved', 'Countdown timers saved.'));
+            })
+            .catch((error) => showCountdownMessage(error.message || String(error), true));
+        });
         const removeButton = document.createElement('button');
         removeButton.type = 'button';
         removeButton.className = 'homey-button-secondary';
@@ -513,7 +911,8 @@
         removeButton.addEventListener('click', () => {
           saveCountdownNames(countdownNames.filter((timerName) => timerName !== name));
         });
-        item.append(label, removeButton);
+        durationField.append(durationLabel, durationInput);
+        item.append(label, durationField, removeButton);
         countdownTimersList.append(item);
       });
     };
@@ -530,17 +929,39 @@
       }
       return normalized;
     };
-    const saveCountdownNames = (names) => {
+    const validateCountdownDurations = (durations) => {
+      if (!durations || typeof durations !== 'object' || Array.isArray(durations)) {
+        throw new Error(countdownText('invalidDuration', 'Countdown timer durations are invalid.'));
+      }
+      const normalized = {};
+      Object.entries(durations).forEach(([name, seconds]) => {
+        if (!Number.isSafeInteger(seconds) || seconds < 1 || seconds > 8640000000000) {
+          throw new Error(countdownText('invalidDuration', 'Duration must be a positive whole number of seconds.'));
+        }
+        normalized[name] = seconds;
+      });
+      return normalized;
+    };
+    const saveCountdownNames = (names, durations = countdownDurations) => {
       let normalized;
+      let normalizedDurations;
       try {
         normalized = validateCountdownNames(names);
+        normalizedDurations = validateCountdownDurations(Object.fromEntries(normalized.map((name) => [
+          name,
+          durations[name] === undefined ? defaultCountdownSeconds : durations[name],
+        ])));
       } catch (error) {
         showCountdownMessage(error.message, true);
         return;
       }
-      setSetting('countdownTimerNames', normalized)
+      Promise.all([
+        setSetting('countdownTimerNames', normalized),
+        setSetting('countdownTimerDurations', normalizedDurations),
+      ])
         .then(() => {
           countdownNames = normalized;
+          countdownDurations = normalizedDurations;
           renderCountdownTimers();
           showCountdownMessage(countdownText('saved', 'Countdown timers saved.'));
         })
@@ -560,9 +981,39 @@
         countdownAddButton.click();
       }
     });
+    Homey.get('countdownTimerDurations', (err, durations) => {
+      if (err) {
+        showCountdownMessage(err.message || String(err), true);
+        return;
+      }
+      if (durations && (typeof durations !== 'object' || Array.isArray(durations))) {
+        showCountdownMessage(countdownText('invalidDuration', 'Countdown timer durations are invalid.'), true);
+        return;
+      }
+      try {
+        countdownDurations = validateCountdownDurations(durations || {});
+      } catch (error) {
+        showCountdownMessage(error.message, true);
+        return;
+      }
+      try {
+        countdownNames = validateCountdownNames(countdownNames);
+        renderCountdownTimers();
+      } catch (error) {
+        showCountdownMessage(error.message, true);
+      }
+    });
+    refreshActiveCountdowns();
+    setInterval(refreshActiveCountdowns, 1000);
     countdownExportButton.addEventListener('click', () => {
       const exportFile = new Blob(
-        [JSON.stringify({ version: 1, timers: countdownNames }, null, 2)],
+        [JSON.stringify({
+          version: 2,
+          timers: countdownNames.map((name) => ({
+            name,
+            seconds: countdownDurations[name] || defaultCountdownSeconds,
+          })),
+        }, null, 2)],
         { type: 'application/json' },
       );
       const downloadUrl = URL.createObjectURL(exportFile);
@@ -581,8 +1032,26 @@
       reader.onload = () => {
         try {
           const imported = JSON.parse(reader.result);
-          const names = Array.isArray(imported) ? imported : imported.timers;
-          saveCountdownNames(validateCountdownNames(names));
+          const importedTimers = Array.isArray(imported) ? imported : imported.timers;
+          if (!Array.isArray(importedTimers)) {
+            throw new Error(countdownText('invalidImport', 'Invalid timer export file.'));
+          }
+          if (importedTimers.every((timer) => typeof timer === 'string')) {
+            saveCountdownNames(validateCountdownNames(importedTimers));
+          } else if (importedTimers.every((timer) => (
+            timer && typeof timer === 'object'
+            && typeof timer.name === 'string'
+            && Number.isSafeInteger(timer.seconds)
+          ))) {
+            const names = validateCountdownNames(importedTimers.map((timer) => timer.name));
+            const durations = Object.fromEntries(importedTimers.map((timer, index) => [
+              names[index],
+              timer.seconds,
+            ]));
+            saveCountdownNames(names, durations);
+          } else {
+            throw new Error(countdownText('invalidImport', 'Invalid timer export file.'));
+          }
         } catch (error) {
           showCountdownMessage(error.message || countdownText('invalidImport', 'Invalid timer export file.'), true);
         } finally {

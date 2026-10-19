@@ -19,5 +19,8 @@
   },
   "1.5.0": {
     "en": "Added repeatable countdown rounds with round tokens in the zero trigger."
+  },
+  "1.6.0": {
+    "en": "Combined the HTTP API, Gmail email, countdown timers, and iCal calendars in one app. Added calendar synchronization, event Flow cards, local events, and iCal settings."
   }
 }

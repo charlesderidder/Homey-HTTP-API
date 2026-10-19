@@ -1,0 +1,23 @@
+{
+  "title": {
+    "en": "Start or reset a countdown timer",
+    "de": "Einen Countdown starten oder zurücksetzen",
+    "nl": "Start of reset een afteltimer"
+  },
+  "titleFormatted": {
+    "en": "Start or reset timer [[timer]] using its configured duration",
+    "de": "Timer [[timer]] mit der eingestellten Dauer starten oder zurücksetzen",
+    "nl": "Start of reset timer [[timer]] met de ingestelde duur"
+  },
+  "args": [
+    {
+      "type": "autocomplete",
+      "name": "timer",
+      "title": {
+        "en": "Timer",
+        "de": "Timer",
+        "nl": "Timer"
+      }
+    }
+  ]
+}

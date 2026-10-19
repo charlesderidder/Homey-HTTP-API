@@ -1,0 +1,12 @@
+{
+  "title": {
+    "en": "Synchronize iCal calendars",
+    "de": "iCal-Kalender synchronisieren",
+    "nl": "iCal-agenda's synchroniseren"
+  },
+  "hint": {
+    "en": "Download and update events from the configured calendar URLs.",
+    "de": "Lädt Ereignisse von den konfigurierten Kalender-URLs herunter und aktualisiert sie.",
+    "nl": "Downloadt en actualiseert afspraken van de ingestelde agenda-URL's."
+  }
+}

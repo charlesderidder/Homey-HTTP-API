@@ -1,0 +1,16 @@
+{
+  "title": {
+    "en": "An iCal event matching the title is ongoing",
+    "de": "Ein iCal-Ereignis mit passendem Titel findet statt",
+    "nl": "Een iCal-afspraak met deze titel is bezig"
+  },
+  "titleFormatted": {
+    "en": "An event with title containing [[title]] in [[calendar]] is ongoing",
+    "de": "Ein Ereignis mit dem Titel [[title]] in [[calendar]] findet statt",
+    "nl": "Een afspraak met titel [[title]] in [[calendar]] is bezig"
+  },
+  "args": [
+    { "type": "text", "name": "title", "placeholder": { "en": "Title contains (optional)", "de": "Titel enthält (optional)", "nl": "Titel bevat (optioneel)" } },
+    { "type": "text", "name": "calendar", "placeholder": { "en": "Calendar name (optional)", "de": "Kalendername (optional)", "nl": "Agendanaam (optioneel)" } }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "title": {
+    "en": "iCal synchronization fails",
+    "de": "Die iCal-Synchronisierung schlägt fehl",
+    "nl": "iCal-synchronisatie mislukt"
+  },
+  "tokens": [
+    { "name": "calendar", "type": "string", "title": { "en": "Calendar", "de": "Kalender", "nl": "Agenda" } },
+    { "name": "error", "type": "string", "title": { "en": "Error", "de": "Fehler", "nl": "Foutmelding" } }
+  ]
+}

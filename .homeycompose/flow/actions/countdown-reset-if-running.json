@@ -1,0 +1,23 @@
+{
+  "title": {
+    "en": "Reset a countdown timer if running",
+    "de": "Countdown-Timer zurücksetzen, wenn er läuft",
+    "nl": "Reset een afteltimer als deze loopt"
+  },
+  "titleFormatted": {
+    "en": "Reset timer [[timer]] to its configured duration if it is running",
+    "de": "Timer [[timer]] auf die eingestellte Dauer zurücksetzen, wenn er läuft",
+    "nl": "Reset timer [[timer]] naar de ingestelde duur als deze loopt"
+  },
+  "args": [
+    {
+      "type": "autocomplete",
+      "name": "timer",
+      "title": {
+        "en": "Timer",
+        "de": "Timer",
+        "nl": "Timer"
+      }
+    }
+  ]
+}

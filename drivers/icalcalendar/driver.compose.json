@@ -1,0 +1,25 @@
+{
+  "name": {
+    "en": "iCal Calendar",
+    "de": "iCal-Kalender",
+    "nl": "iCal-agenda"
+  },
+  "class": "sensor",
+  "capabilities": [
+    "alarm_generic"
+  ],
+  "capabilitiesOptions": {
+    "alarm_generic": {
+      "title": {
+        "en": "Upcoming events",
+        "de": "Bevorstehende Ereignisse",
+        "nl": "Aankomende afspraken"
+      }
+    }
+  },
+  "images": {
+    "small": "/assets/images/small.png",
+    "large": "/assets/images/large.png",
+    "xlarge": "/assets/images/xlarge.png"
+  }
+}

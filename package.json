@@ -1,6 +1,6 @@
 {
   "name": "dev.charlesderidder.homeyhttpapi",
-  "version": "1.0.0",
+  "version": "1.6.0",
   "main": "app.ts",
   "license": "MIT",
   "scripts": {
@@ -17,5 +17,19 @@
   },
   "engines": {
     "node": ">=16.0.0"
+  },
+  "dependencies": {
+    "emailjs": "^3.8.1",
+    "node-ical": "^0.16.1"
+  },
+  "overrides": {
+    "node-ical": {
+      "axios": "^1.20.0",
+      "uuid": "^11.1.1"
+    }
+  },
+  "resolutions": {
+    "node-ical/axios": "^1.20.0",
+    "node-ical/uuid": "^11.1.1"
   }
 }

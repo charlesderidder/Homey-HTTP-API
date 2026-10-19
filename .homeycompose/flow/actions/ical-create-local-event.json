@@ -1,0 +1,25 @@
+{
+  "title": {
+    "en": "Create a local calendar event",
+    "de": "Ein lokales Kalenderereignis erstellen",
+    "nl": "Een lokale agenda-afspraak maken"
+  },
+  "titleFormatted": {
+    "en": "Create [[title]] in [[calendar]] from [[start]] to [[end]]: [[description]] at [[location]]",
+    "de": "[[title]] in [[calendar]] von [[start]] bis [[end]] erstellen: [[description]] bei [[location]]",
+    "nl": "Maak [[title]] in [[calendar]] van [[start]] tot [[end]]: [[description]] op [[location]]"
+  },
+  "hint": {
+    "en": "Creates an event stored only in Homey; it is not added to the external calendar.",
+    "de": "Erstellt ein Ereignis nur in Homey; es wird nicht zum externen Kalender hinzugefügt.",
+    "nl": "Maakt een afspraak die alleen in Homey wordt opgeslagen en niet aan de externe agenda wordt toegevoegd."
+  },
+  "args": [
+    { "type": "text", "name": "calendar", "placeholder": { "en": "Calendar name", "de": "Kalendername", "nl": "Agendanaam" } },
+    { "type": "text", "name": "title", "placeholder": { "en": "Event title", "de": "Ereignistitel", "nl": "Titel van afspraak" } },
+    { "type": "text", "name": "start", "placeholder": { "en": "Start date/time (ISO 8601)", "de": "Startdatum/-zeit (ISO 8601)", "nl": "Startdatum/-tijd (ISO 8601)" } },
+    { "type": "text", "name": "end", "placeholder": { "en": "End date/time (ISO 8601)", "de": "Enddatum/-zeit (ISO 8601)", "nl": "Einddatum/-tijd (ISO 8601)" } },
+    { "type": "text", "name": "description", "placeholder": { "en": "Description", "de": "Beschreibung", "nl": "Beschrijving" } },
+    { "type": "text", "name": "location", "placeholder": { "en": "Location", "de": "Ort", "nl": "Locatie" } }
+  ]
+}
