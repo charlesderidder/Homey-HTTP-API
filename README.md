@@ -25,6 +25,12 @@ Add `field` (or the Dutch alias `veld`) to a `GET` request to return one propert
 http://HOMEY_IP:3000/alles?veld=Zonsopkomst
 ```
 
+If API token authentication is enabled, include the token as well:
+
+```text
+http://HOMEY_IP:3000/alles?veld=Zonsopkomst&token=YOUR_TOKEN
+```
+
 The response contains only that value in its `data` property. A requested field that does not exist returns `404`.
 
 ## Countdown timers
