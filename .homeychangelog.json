@@ -25,5 +25,8 @@
   },
   "1.6.1": {
     "en": "Protect saved settings during loading so app settings cannot overwrite existing data before it has been read."
+  },
+  "1.6.2": {
+    "en": "Show new and changed iCal events after synchronization, send their Flow triggers, and report per-calendar synchronization errors."
   }
 }

@@ -512,6 +512,7 @@
     const showIcalStatus = (message, isError = false) => {
       icalSaveStatus.style.display = 'block';
       icalSaveStatus.style.color = isError ? 'red' : 'green';
+      icalSaveStatus.style.whiteSpace = 'pre-line';
       icalSaveStatus.textContent = message;
     };
     const validateICalCalendars = (calendars) => {
@@ -834,16 +835,38 @@
           showIcalStatus(`${icalStatusText('syncFailed', 'Calendar synchronization failed:')} ${err.message || err}`, true);
           return;
         }
-        const count = result && Number.isInteger(result.events) ? result.events : 0;
+        const added = result && Array.isArray(result.added) ? result.added : [];
+        const changed = result && Array.isArray(result.changed) ? result.changed : [];
         const failed = result && Array.isArray(result.failedCalendars) ? result.failedCalendars : [];
+        const changes = [];
+        const formatChanges = (events) => events
+          .map((event) => `${event.calendar}: ${event.title} (${new Date(event.start).toLocaleString()})`)
+          .join(', ');
+        if (added.length > 0) {
+          changes.push(
+            `${icalStatusText('syncAdded', 'New ({count}):').replace('{count}', String(added.length))} ${formatChanges(added)}`,
+          );
+        }
+        if (changed.length > 0) {
+          changes.push(
+            `${icalStatusText('syncChanged', 'Changed ({count}):').replace('{count}', String(changed.length))} ${formatChanges(changed)}`,
+          );
+        }
+        const changeSummary = changes.length > 0
+          ? changes.join('\n')
+          : icalStatusText('syncNoChanges', 'No new or changed events.');
         if (failed.length > 0) {
+          const failures = result && Array.isArray(result.failures) ? result.failures : [];
+          const failureDetails = failures
+            .map((failure) => `${failure.calendar}: ${failure.error}`)
+            .join('\n');
           showIcalStatus(
-            `${icalStatusText('syncPartial', 'Calendar synchronization finished with errors. Events:')} ${count}. ${failed.join(', ')}`,
+            `${icalStatusText('syncPartial', 'Synchronization finished with errors.')}\n${changeSummary}\n${failureDetails || failed.join(', ')}`,
             true,
           );
           return;
         }
-        showIcalStatus(`${icalStatusText('syncSuccess', 'Calendar synchronization complete. Events:')} ${count}`);
+        showIcalStatus(`${icalStatusText('syncSuccess', 'Synchronization complete.')}\n${changeSummary}`);
       });
     });
     const countdownText = (key, fallback) => (

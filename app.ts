@@ -69,6 +69,25 @@ interface ICalEvent {
   source: 'remote' | 'local';
 }
 
+interface ICalSyncChange {
+  calendar: string;
+  title: string;
+  start: string;
+}
+
+interface ICalCalendarSyncFailure {
+  calendar: string;
+  error: string;
+}
+
+interface ICalSyncResult {
+  events: number;
+  added: ICalSyncChange[];
+  changed: ICalSyncChange[];
+  failedCalendars: string[];
+  failures: ICalCalendarSyncFailure[];
+}
+
 interface ICalFlowArgs {
   calendar?: unknown;
   title?: unknown;
@@ -84,6 +103,7 @@ const COUNTDOWN_TIMER_STATES_SETTING = 'countdownTimerStates';
 const COUNTDOWN_TIMER_DURATIONS_SETTING = 'countdownTimerDurations';
 const ICAL_CALENDARS_SETTING = 'icalCalendars';
 const ICAL_EVENTS_SETTING = 'icalEvents';
+const ICAL_SYNC_SNAPSHOTS_SETTING = 'icalSyncSnapshots';
 const ICAL_SYNC_INTERVAL_SETTING = 'icalSyncInterval';
 const ICAL_SYNC_DAYS_SETTING = 'icalSyncDays';
 const COUNTDOWN_INTERVAL_MS = 1000;
@@ -122,10 +142,11 @@ class LocalApi extends Homey.App {
   countdownTriggers = new Map<string, Homey.FlowCardTrigger>();
   countdownInterval?: ReturnType<typeof setInterval>;
   icalEvents: ICalEvent[] = [];
+  icalSyncSnapshots = new Map<string, ICalEvent[]>();
   icalInterval?: ReturnType<typeof setInterval>;
   icalEventTickInterval?: ReturnType<typeof setInterval>;
   icalConfigTimeout?: ReturnType<typeof setTimeout>;
-  icalSyncPromise?: Promise<{ events: number; failedCalendars: string[] }>;
+  icalSyncPromise?: Promise<ICalSyncResult>;
   icalFlowTokens = new Map<string, Homey.FlowToken>();
   lastICalTick = Date.now();
   icalTriggers = new Map<string, Homey.FlowCardTrigger>();
@@ -247,6 +268,40 @@ class LocalApi extends Homey.App {
       throw new Error('iCal calendar names must be unique.');
     }
     return normalized;
+  }
+
+  isValidICalEvent(event: unknown): event is ICalEvent {
+    return Boolean(
+      event
+        && typeof event === 'object'
+        && 'id' in event
+        && typeof event.id === 'string'
+        && 'uid' in event
+        && typeof event.uid === 'string'
+        && 'calendar' in event
+        && typeof event.calendar === 'string'
+        && 'title' in event
+        && typeof event.title === 'string'
+        && 'description' in event
+        && typeof event.description === 'string'
+        && 'location' in event
+        && typeof event.location === 'string'
+        && 'url' in event
+        && typeof event.url === 'string'
+        && 'status' in event
+        && typeof event.status === 'string'
+        && 'start' in event
+        && typeof event.start === 'number'
+        && Number.isFinite(event.start)
+        && 'end' in event
+        && typeof event.end === 'number'
+        && Number.isFinite(event.end)
+        && event.end > event.start
+        && 'created' in event
+        && (event.created === null || (typeof event.created === 'number' && Number.isFinite(event.created)))
+        && 'source' in event
+        && (event.source === 'remote' || event.source === 'local'),
+    );
   }
 
   async persistICalEvents(): Promise<void> {
@@ -418,7 +473,7 @@ class LocalApi extends Homey.App {
     return message.replace(/https?:\/\/[^\s"'<>]+/gi, '[calendar URL]');
   }
 
-  syncICalCalendars(): Promise<{ events: number; failedCalendars: string[] }> {
+  syncICalCalendars(): Promise<ICalSyncResult> {
     if (this.icalSyncPromise) {
       return this.icalSyncPromise;
     }
@@ -428,7 +483,7 @@ class LocalApi extends Homey.App {
     return this.icalSyncPromise;
   }
 
-  async performICalCalendarSync(): Promise<{ events: number; failedCalendars: string[] }> {
+  async performICalCalendarSync(): Promise<ICalSyncResult> {
     const calendars = this.getICalCalendars();
     const now = Date.now();
     const days = Number(this.homey.settings.get(ICAL_SYNC_DAYS_SETTING) || ICAL_SYNC_DAYS);
@@ -477,27 +532,63 @@ class LocalApi extends Homey.App {
       configuredNames.has(event.calendar) && !successfulNames.has(event.calendar) && event.end > now
     ));
     const freshEvents = successfulResults.flatMap((result) => result.events);
-    const previousById = new Map(oldRemote.map((event) => [event.id, event]));
-    freshEvents.forEach((event) => {
-      const previous = previousById.get(event.id);
-      if (previous && (
-        previous.title !== event.title
+    const added: ICalSyncChange[] = [];
+    const changed: ICalSyncChange[] = [];
+    successfulResults.forEach(({ calendar, events }) => {
+      const previousById = new Map(
+        (this.icalSyncSnapshots.get(calendar.name) || []).map((event) => [event.id, event]),
+      );
+      events.forEach((event) => {
+        const previous = previousById.get(event.id);
+        if (!previous) {
+          if (this.icalSyncSnapshots.has(calendar.name)) {
+            added.push({
+              calendar: event.calendar,
+              title: event.title,
+              start: new Date(event.start).toISOString(),
+            });
+            this.fireICalTrigger('ical-event-added', this.iCalEventTokens(event));
+          }
+          return;
+        }
+        if (
+          previous.title !== event.title
           || previous.description !== event.description
           || previous.location !== event.location
           || previous.start !== event.start
           || previous.end !== event.end
-      )) {
-        this.fireICalTrigger('ical-event-changed', this.iCalEventTokens(event));
-      } else if (!previous && event.created !== null && event.created >= now - 24 * 60 * 60 * 1000) {
-        this.fireICalTrigger('ical-event-added', this.iCalEventTokens(event));
+          || previous.url !== event.url
+          || previous.status !== event.status
+        ) {
+          changed.push({
+            calendar: event.calendar,
+            title: event.title,
+            start: new Date(event.start).toISOString(),
+          });
+          this.fireICalTrigger('ical-event-changed', this.iCalEventTokens(event));
+        }
+      });
+      this.icalSyncSnapshots.set(calendar.name, events);
+    });
+    const configuredNamesForSnapshots = new Set(calendars.map((calendar) => calendar.name));
+    this.icalSyncSnapshots.forEach((_events, calendarName) => {
+      if (!configuredNamesForSnapshots.has(calendarName)) {
+        this.icalSyncSnapshots.delete(calendarName);
       }
     });
+    const snapshots = Object.fromEntries(this.icalSyncSnapshots);
+    this.homey.settings.set(ICAL_SYNC_SNAPSHOTS_SETTING, snapshots);
     this.icalEvents = [...freshEvents, ...preservedEvents, ...localEvents];
     await this.persistICalEvents();
     this.log(`iCal synchronization complete: ${this.icalEvents.length} event(s) available`);
     return {
       events: this.icalEvents.length,
+      added,
+      changed,
       failedCalendars: syncResults.filter((result) => 'error' in result).map((result) => result.calendar.name),
+      failures: syncResults
+        .filter((result): result is { calendar: ICalCalendar; error: string } => 'error' in result)
+        .map((result) => ({ calendar: result.calendar.name, error: result.error })),
     };
   }
 
@@ -545,24 +636,7 @@ class LocalApi extends Homey.App {
     this.getICalCalendars();
     const rawEvents: unknown = this.homey.settings.get(ICAL_EVENTS_SETTING);
     if (rawEvents !== undefined && rawEvents !== null) {
-      if (!Array.isArray(rawEvents) || !rawEvents.every((event) => (
-        event
-          && typeof event.id === 'string'
-          && typeof event.uid === 'string'
-          && typeof event.calendar === 'string'
-          && typeof event.title === 'string'
-          && typeof event.description === 'string'
-          && typeof event.location === 'string'
-          && typeof event.url === 'string'
-          && typeof event.status === 'string'
-          && typeof event.start === 'number'
-          && Number.isFinite(event.start)
-          && typeof event.end === 'number'
-          && Number.isFinite(event.end)
-          && event.end > event.start
-          && (event.created === null || typeof event.created === 'number')
-          && (event.source === 'remote' || event.source === 'local')
-      ))) {
+      if (!Array.isArray(rawEvents) || !rawEvents.every((event) => this.isValidICalEvent(event))) {
         throw new Error('Saved iCal events are invalid. Repair the calendar settings before restarting the app.');
       }
       const eventIds = (rawEvents as ICalEvent[]).map((event) => event.id);
@@ -570,6 +644,22 @@ class LocalApi extends Homey.App {
         throw new Error('Saved iCal event IDs must be unique.');
       }
       this.icalEvents = rawEvents as ICalEvent[];
+    }
+    const rawSnapshots: unknown = this.homey.settings.get(ICAL_SYNC_SNAPSHOTS_SETTING);
+    if (rawSnapshots !== undefined && rawSnapshots !== null) {
+      if (typeof rawSnapshots !== 'object' || Array.isArray(rawSnapshots)) {
+        throw new Error('Saved iCal synchronization snapshots are invalid.');
+      }
+      Object.entries(rawSnapshots).forEach(([calendar, events]) => {
+        if (
+          !Array.isArray(events)
+          || !events.every((event) => this.isValidICalEvent(event) && event.source === 'remote' && event.calendar === calendar)
+          || new Set(events.map((event) => event.id)).size !== events.length
+        ) {
+          throw new Error(`Saved iCal synchronization snapshot for "${calendar}" is invalid.`);
+        }
+        this.icalSyncSnapshots.set(calendar, events);
+      });
     }
     await this.registerICalFlowTokens();
     const interval = Number(this.homey.settings.get(ICAL_SYNC_INTERVAL_SETTING) || ICAL_SYNC_INTERVAL_MINUTES);
@@ -607,7 +697,7 @@ class LocalApi extends Homey.App {
     this.icalEventTickInterval = setInterval(() => this.tickICalEvents(), COUNTDOWN_INTERVAL_MS);
   }
 
-  async syncCalendars(): Promise<{ events: number; failedCalendars: string[] }> {
+  async syncCalendars(): Promise<ICalSyncResult> {
     return this.syncICalCalendars();
   }
 
